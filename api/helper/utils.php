@@ -103,7 +103,11 @@ class helper_utils {
     */
     public static function get_folder($brand, $model) {
         $brand_data = helper_utils::_get_brand_data($brand);
-        return $brand_data[$model]["folder"];
+        $folder = $brand_data[$model]["folder"];
+
+        if ($folder)
+            return $folder;
+        else return false;
     }
 
 	/**
@@ -116,7 +120,11 @@ class helper_utils {
     */
     public static function get_file_list($brand, $model) {
         $files = json_decode(file_get_contents(MODULES_DIR . $brand . "/brand_data.json"), true);
-        return $files[$model]["config_files"];
+        $config_files = $files[$model]["config_files"];
+        
+        if ($config_files)
+            return $config_files;
+        else return false;
     }
 
 	/**

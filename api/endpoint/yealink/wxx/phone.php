@@ -1,9 +1,8 @@
 <?php 
 
 /**
- * Yealink t3x rules File
+ * Yealink Wxx rules File
  *
- * @author Andrew Nagy
  * @author Francis Genet
  * @license MPL / GPLv2 / LGPL
  * @package Provisioner

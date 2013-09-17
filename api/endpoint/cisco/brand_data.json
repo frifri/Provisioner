@@ -57,7 +57,11 @@
         "folder": "linksysata",
         "config_files": [
             "$model.cfg",
-            "spa$mac.xml"
+            "$mac.xml"
+        ],
+        "regexs": [
+            "/spa.*\\.cfg$/i",
+            "/[a-f0-9]{12}\\.xml/i"
         ]
     },
 

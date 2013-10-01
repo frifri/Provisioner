@@ -36,12 +36,16 @@ class Files {
      * @class  AccessControl {@requires admin}
      */
     function generate_files($request_data) {
+        $this->_log->logInfo(' - Entering generate_files (/generate) - ');
+
+        $this->_log->logDebug("Loading adapter");
         $adapter_name = "adapter_" . $this->_settings->adapter . "_adapter";
         $adapter = new $adapter_name();
 
         // This grab the settings from whatever datasource you want.
         // Can set the settings to nothing if the only settings that you need
         // to use are comming from the payload of this API
+        $this->_log->logDebug("Loading the config_manager...");
         $config_manager = $adapter->get_config_manager(
             $request_data['provider_id'],
             strtolower($request_data['mac']), 
@@ -49,6 +53,7 @@ class Files {
             $request_data['model']
         );
 
+        $this->_log->logDebug("Now importing custom settings...");
         $settings = $request_data['settings'];
         $config_manager->import_settings($settings);
         

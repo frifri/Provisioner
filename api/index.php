@@ -22,7 +22,7 @@ header('Access-Control-Allow-Origin:*');
 header('Access-Control-Max-Age:86400');
 
 $r = new Restler();
-$r->setSupportedFormats('JsonFormat', 'UploadFormat');
+$r->setSupportedFormats('JsonFormat');
 $r->addAPIClass('phones');
 $r->addAPIClass('providers');
 $r->addAPIClass('accounts');

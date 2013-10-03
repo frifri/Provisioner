@@ -84,7 +84,8 @@ class wrapper_bigcouch {
 
     public function getUuid($database) {
         $this->_set_client($database);
-        return $this->_couch_client->getUuids(1)[0];
+        $uuids = $this->_couch_client->getUuids(1);
+        return $uuids[0];
     }
 
     // Retrieve all the document for a specific db

@@ -9,6 +9,8 @@
  * @version 5.0
  */
 
+date_default_timezone_set('America/Los_Angeles');
+
 require_once 'bootstrap.php' ;
 require_once LIB_BASE . 'restler/restler.php';
 require_once LIB_BASE . 'KLogger.php';

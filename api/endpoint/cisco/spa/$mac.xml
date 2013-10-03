@@ -2,7 +2,7 @@
     <!-- Reset the global configuration options, now we will reset per day instead of every second -->
     <Resync_Periodic></Resync_Periodic>
     <Resync_On_Reset>Yes</Resync_On_Reset>
-    <!-- <Profile_Rule>{{ provisioning_url }}$MA.xml</Profile_Rule> -->
+    <Profile_Rule>{{ provisioning_url }}$MA.xml</Profile_Rule>
 
     <!-- Line Registration Information -->
     <Text_Logo group="Phone/General"></Text_Logo>
@@ -27,7 +27,7 @@
     <Dial_Plan_{{ x }}_ ua="na">{{ digitmap|default('*xxxxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.|**xxxxxxx') }}</Dial_Plan_{{ x }}_>
     	
     <!-- User Proxy and Registration - These are extension specific settings too--> 
-    <Proxy_{{ x }}_ ua="na">{{ line.sip_server.primary.host }}</Proxy_{{ x }}_>
+    <Proxy_{{ x }}_ ua="na">{{ line.sip_server.primaryv.host }}</Proxy_{{ x }}_>
     <SIP_Port_{{ x }}_ ua="na">{{ local_port }}</SIP_Port_{{ x }}_>
     <Use_Outbound_Proxy_{{ x }}_ ua="na">Yes</Use_Outbound_Proxy_{{ x }}_>
     <Outbound_Proxy_{{ x }}_ ua="na">{{ line.outbound_proxy.primary.host }}</Outbound_Proxy_{{ x }}_>
@@ -60,8 +60,8 @@
     <Enable_Web_Server ua="na">Yes</Enable_Web_Server>
     <Web_Server_Port ua="na">80</Web_Server_Port>
     <Enable_Web_Admin_Access ua="na">Yes</Enable_Web_Admin_Access>
-    <!-- <Admin_Passwd ua="na">{{ password.admin }}</Admin_Passwd> -->
-    <!-- <User_Password ua="na">{{ password.user }}</User_Password> -->
+    <Admin_Passwd ua="na">{{ password.admin }}</Admin_Passwd>
+    <User_Password ua="na">{{ password.user }}</User_Password>
 
     <!-- options: -->
     <Server_Type group="Attendant_Console/General">Broadsoft</Server_Type>
@@ -142,4 +142,5 @@
     <EXT_IP ua="na"></EXT_IP>
     <EXT_RTP_Port_Min ua="na"></EXT_RTP_Port_Min>
     <NAT_Keep_Alive_Intvl ua="na">15</NAT_Keep_Alive_Intvl>
+
 </flat-profile>

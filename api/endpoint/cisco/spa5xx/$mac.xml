@@ -167,9 +167,9 @@
 
   <!-- RTP Parameters -->
 
-  <RTP_Port_Min ua="na">16384</RTP_Port_Min>
-  <RTP_Port_Max ua="na">16538</RTP_Port_Max>
-  <RTP_Packet_Size ua="na">0.030</RTP_Packet_Size>
+  <RTP_Port_Min ua="na">{{ rtp_min_port|default('11780') }}</RTP_Port_Min>
+  <RTP_Port_Max ua="na">{{ rtp_max_port|default('11780') }}</RTP_Port_Max>
+  <RTP_Packet_Size ua="na">0.020</RTP_Packet_Size>
   <Max_RTP_ICMP_Err ua="na">0</Max_RTP_ICMP_Err>
   <RTCP_Tx_Interval ua="na">0</RTCP_Tx_Interval>
   <No_UDP_Checksum ua="na">No</No_UDP_Checksum>
@@ -243,7 +243,7 @@
   <!-- NAT Settings -->
 
   <NAT_Mapping_Enable_{{ x }}_ ua="na">No</NAT_Mapping_Enable_{{ x }}_>
-  <NAT_Keep_Alive_Enable_{{ x }}_ ua="na">No</NAT_Keep_Alive_Enable_{{ x }}_>
+  <NAT_Keep_Alive_Enable_{{ x }}_ ua="na">Yes</NAT_Keep_Alive_Enable_{{ x }}_>
   <NAT_Keep_Alive_Msg_{{ x }}_ ua="na">$NOTIFY</NAT_Keep_Alive_Msg_{{ x }}_>
   <NAT_Keep_Alive_Dest_{{ x }}_ ua="na">$PROXY</NAT_Keep_Alive_Dest_{{ x }}_>
 

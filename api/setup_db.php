@@ -22,7 +22,7 @@ define('CONFIG_FILE', PROVISIONER_BASE . 'config.json');
 $configs = json_decode(file_get_contents(CONFIG_FILE));
 
 if (!$configs)
-    die('Could not load the config file');
+    die("Could not load the config file\n");
 
 $server_url = $configs->database->url . ":" . $configs->database->port;
 

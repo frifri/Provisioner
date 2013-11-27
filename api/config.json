@@ -1,5 +1,5 @@
 {
-    "version": "5.4.1",
+    "version": "5.4.2",
     "static_data_source": "database",
     "adapter": "generic",
     "db_prefix": "",

@@ -5,7 +5,6 @@
     "db_prefix": "",
     "custom_http_port": "",
 
-
     "paths": {
         "root": "/myprovisionerfolder/",
         "endpoint": "/endpoint/",

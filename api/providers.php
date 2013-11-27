@@ -75,7 +75,7 @@ class Providers {
      */
     function put($request_data = null) {
         $object_ready = $this->db->prepareAddProviders($request_data);
-        if (!$this->db->add('providers', $object_ready)
+        if (!$this->db->add('providers', $object_ready))
             throw new RestException(500, 'Error while Adding');
         else
             return array('status' => true, 'message' => 'Provider successfully added');

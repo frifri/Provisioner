@@ -30,5 +30,6 @@ $r->addAPIClass('providers');
 $r->addAPIClass('accounts');
 $r->addAPIClass('users');
 $r->addAPIClass('files');
+$r->addAPIClass('ui');
 $r->addAuthenticationClass('AccessControl');
 $r->handle();

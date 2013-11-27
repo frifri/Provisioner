@@ -12,7 +12,7 @@
 class Providers {
     public $db;
 
-    private $_FIELDS = array('name', 'settings', 'domain', 'default_account_id', 'authorized_ip');
+    /*private $_FIELDS = array('name', 'settings', 'domain', 'default_account_id', 'authorized_ip');*/
 
     function __construct() {
         $this->db = new BigCouch(DB_SERVER, DB_PORT);
@@ -75,7 +75,7 @@ class Providers {
      */
     function put($request_data = null) {
         $object_ready = $this->db->prepareAddProviders($request_data);
-        if (!$this->db->add('providers', Validator::validateAdd($object_ready, $this->_FIELDS)))
+        if (!$this->db->add('providers', $object_ready)
             throw new RestException(500, 'Error while Adding');
         else
             return array('status' => true, 'message' => 'Provider successfully added');

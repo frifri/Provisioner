@@ -211,6 +211,13 @@ class helper_utils {
             return false;
     }
 
+    public static function get_param($array, $key, $default) {
+        if (!isset($array[$key]))
+            return $default;
+        else
+            return $array[$key];
+    }
+
     /**
     * Get the Regular Expressions for matching web requests
     *

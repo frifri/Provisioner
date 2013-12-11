@@ -12,10 +12,8 @@
 class Providers {
     public $db;
 
-    /*private $_FIELDS = array('name', 'settings', 'domain', 'default_account_id', 'authorized_ip');*/
-
     function __construct() {
-        $this->db = new BigCouch(DB_SERVER, DB_PORT);
+        $this->db = new wrapper_bigcouch();
     }
 
     /**
@@ -23,7 +21,7 @@ class Providers {
      *
      * @url GET /
      * @access protected
-     * @class  AccessControl {@requires admin}
+     * @class  AccessControlKazoo
      */
     function retrieveAll() {
         $result = array();
@@ -36,10 +34,11 @@ class Providers {
     /**
      *  This will get the information for a specific provider
      *
+     * @url GET /{provider_id}
      * @access protected
-     * @class  AccessControl {@requires admin}
+     * @class  AccessControlKazoo
      */
-    function get($provider_id) {
+    function getOne($request_data, $provider_id) {
         $provider = array();
 
         $provider['data'] = $this->db->get('providers', $provider_id);
@@ -53,12 +52,11 @@ class Providers {
     /**
      *  This will update the information for a provider
      *
+     * @url POST /{provider_id}
      * @access protected
-     * @class  AccessControl {@requires admin}
+     * @class  AccessControlKazoo
      */
-    function post($provider_id, $request_data = null) {
-        Validator::validateEdit($request_data, $this->_FIELDS);
-
+    function update($request_data, $provider_id) {
         foreach ($request_data as $key => $value) {
             if (!$this->db->update('providers', $provider_id, $key, $value))
                 throw new RestException(500, 'Error while saving');
@@ -70,10 +68,11 @@ class Providers {
     /**
      *  This will add a provider
      *
+     * @url PUT /
      * @access protected
-     * @class  AccessControl {@requires admin}
+     * @class  AccessControlKazoo
      */
-    function put($request_data = null) {
+    function create($request_data) {
         $object_ready = $this->db->prepareAddProviders($request_data);
         if (!$this->db->add('providers', $object_ready))
             throw new RestException(500, 'Error while Adding');
@@ -85,8 +84,9 @@ class Providers {
      *  This function only delete the provider
      *  TODO: allow the provider to also delete the users linked to this provider.
      *
+     * @url DELETE /{provider_id}
      * @access protected
-     * @class  AccessControl {@requires admin}
+     * @class  AccessControlKazoo
      */
     function delete($provider_id) {
         if (!$this->db->delete('providers', $provider_id))
@@ -95,5 +95,3 @@ class Providers {
             return array('status' => true, 'message' => 'Provider successfully deleted');
     }
 }
-
-?>

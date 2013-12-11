@@ -17,7 +17,12 @@ class Accounts {
         $this->_db = new wrapper_bigcouch();
     }
 
-    // Yep...
+    /**
+     * This will handle the options requests
+     *
+     * @url OPTIONS /{account_id}
+     */
+
     function options() {
         return;
     }
@@ -26,43 +31,31 @@ class Accounts {
      * This will allow the user to get the default settings for an account and for a phone 
      *
      * @url GET /{account_id}
-     * @url GET /{account_id}/{mac_address}
      * @access protected
-     * @class  AccessControl {@requires user}
+     * @class  AccessControlKazoo
      */
 
-    function retrieveDocument($account_id, $mac_address = null) {
-        $account_db = $this->_get_account_db($account_id);
+    function retrieveDocument($account_id) {
+        $account_db = helper_utils::get_account_db($account_id);
 
-        // Retrieving the default settings for a user
-        if (!$mac_address) {
-            $default_settings = array();
-            $default_settings['data'] = $this->_db->get($account_db, $account_id);
+        if ($account_db) {
+            $obj_return = array();
+            $doc = $this->_db->get($account_db, $account_id);
 
-            if (isset($default_settings['data']['settings']))
-                return $default_settings;
-            else {
-                throw new RestException(404, 'This account_id do not exist or there are no default settings for this user');
-            }
-        } else { // retrieving phone specific settings
-            $mac_settings = array();
-            $mac_settings['data'] = $this->_db->get($account_db, $mac_address);
-
-            if (isset($mac_settings['data']['settings']))
-                return $mac_settings;
-            else {
-                throw new RestException(404, 'There is no phone with this mac_address for this account or there are no specific settings for this phone');
-            }
-        }
+            if ($doc)
+                return $obj_return['data'] = $doc;
+            else
+                throw new RestException(404, 'This account does not exist');
+        } else
+            throw new RestException(400, 'This account id is not correct');
     }
     
     /**
      * This will allow the user to modify the account/phone settings
      *
      * @url POST /{account_id}
-     * @url POST /{account_id}/{mac_address}
      * @access protected
-     * @class  AccessControl {@requires user}
+     * @class  AccessControlKazoo
      */
 
     function editDocument($account_id, $mac_address = null, $request_data = null) {
@@ -110,11 +103,9 @@ class Accounts {
     /**
      * This will allow the user to add an account or a phone
      *
-     * @class  Auth {@requires user}
      * @url PUT /{account_id}
-     * @url PUT /{account_id}/{mac_address}
      * @access protected
-     * @class  AccessControl {@requires user}
+     * @class  AccessControlKazoo
      */
 
     function addDocument($account_id, $mac_address = null, $request_data = null) {
@@ -156,9 +147,8 @@ class Accounts {
      * Delete the whole account or just a phone
      *
      * @url DELETE /{account_id}
-     * @url DELETE /{account_id}/{mac_address}
      * @access protected
-     * @class  AccessControl {@requires admin}
+     * @class  AccessControlKazoo
      */
 
     function delDocument($account_id, $mac_address = null) {
@@ -211,4 +201,3 @@ class Accounts {
         }
     }
 }
-?>

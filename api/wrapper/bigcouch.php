@@ -122,14 +122,14 @@ class wrapper_bigcouch {
         try {
             if ($filter_key)
                 $response = $this->_couch_client
-                            ->startkey(array($filter_key))
-                            ->endkey(array($filter_key, array()))
-                            ->asArray()
-                            ->getView($this->_settings->db_prefix . $database, "list_by_$document_type");
+                                 ->startkey(array($filter_key))
+                                 ->endkey(array($filter_key, array()))
+                                 ->asArray()
+                                 ->getView($this->_settings->db_prefix . $database, "list_by_$document_type");
             else
                 $response = $this->_couch_client
-                            ->asArray()
-                            ->getView($this->_settings->db_prefix . $database, "list_by_$document_type");
+                                 ->asArray()
+                                 ->getView($this->_settings->db_prefix . $database, "list_by_$document_type");
 
             if ($format)
                 return $this->_formatViewResponse($response);
@@ -145,7 +145,10 @@ class wrapper_bigcouch {
         $this->_set_client($database);
 
         try {
-            return $this->_couch_client->asArray()->key($filter_key)->getView($this->_settings->db_prefix . $database, "list_by_$document_type");
+            return $this->_couch_client
+                        ->asArray()
+                        ->key($filter_key)
+                        ->getView($this->_settings->db_prefix . $database, "list_by_$document_type");
         } catch (Exception $e) {
             return false;
         }
@@ -360,8 +363,40 @@ class wrapper_bigcouch {
 
     // Add - providers
     public function prepareAddProviders($request_data) {
-        $request_data['pvt_type'] = 'provider';
-        return $request_data;
+        $to_build = array();
+        $to_build['pvt_type'] = 'provider';
+
+        if (!isset($request_data['authorized_ip']))
+            $to_build['authorized_ip'] = array("::1", "127.0.0.1");
+        else
+            $to_build['authorized_ip'] = $request_data['authorized_ip'];
+
+        if (!isset($request_data['default_account_id']))
+            $to_build['default_account_id'] = null;
+        else
+            $to_build['default_account_id'] = $request_data['default_account_id'];
+
+        if (!isset($request_data['name']))
+            $to_build['name'] = "Default provider name";
+        else
+            $to_build['name'] = $request_data['name'];
+
+        if (!isset($request_data['pvt_access_type']))
+            $to_build['pvt_access_type'] = "user";
+        else
+            $to_build['pvt_access_type'] = $request_data['pvt_access_type'];
+
+        if (!isset($request_data['domain']))
+            $to_build['domain'] = "default.domain.com";
+        else
+            $to_build['domain'] = $request_data['domain'];
+
+        if (!isset($request_data['settings']))
+            $to_build['settings'] = '{}';
+        else
+            $to_build['settings'] = $request_data['settings'];
+
+        return $to_build;
     }
 
     // Add - accounts

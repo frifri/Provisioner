@@ -192,6 +192,26 @@ class helper_utils {
     }
 
     /**
+    * Get Couch doc name from the brand/family/model
+    *
+    * @author   Francis Genet
+    * @param    string   $brand       The device brand
+    * @param    string   $family      The device family
+    * @param    string   $model       The device model
+    * @return   string   The document name
+    */
+    public static function get_device_doc_name($brand, $family = null, $model = null) {
+        if ($model)
+            return $brand . "_" . $family . "_" . $model;
+        elseif ($family)
+            return $brand . "_" . $family;
+        elseif ($brand)
+            return $brand;
+        else
+            return false;
+    }
+
+    /**
     * Get the Regular Expressions for matching web requests
     *
     * @author   ?

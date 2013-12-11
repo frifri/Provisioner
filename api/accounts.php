@@ -49,6 +49,54 @@ class Accounts {
         } else
             throw new RestException(400, 'This account id is not correct');
     }
+
+    /**
+     * This will allow the user to add an account or a phone
+     *
+     * @url PUT /
+     * @url PUT /{account_id}
+     * @access protected
+     * @class  AccessControlKazoo
+     */
+
+    function addDocument($request_data, $account_id = null) {
+        $provider_id = helper_utils::get_param($request_data, 'provider_id', false);
+
+        if (!$provider_id)
+            throw new RestException(400, 'Missing provider_id');
+
+        // We needt o get the provider doc first
+        $provider_doc = $this->_db->get('providers', $provider_id);
+        $account_list = $provider_doc['accounts'];
+
+        // If there is no account we need to generate one
+        if (!$account_id) {
+            $account_id = sprintf('%04x%04x%04x%04x%04x%04x%04x%04x',
+                                    mt_rand(0, 65535),
+                                    mt_rand(0, 65535),
+                                    mt_rand(0, 65535),
+                                    mt_rand(16384, 20479),
+                                    mt_rand(32768, 49151),
+                                    mt_rand(0, 65535),
+                                    mt_rand(0, 65535),
+                                    mt_rand(0, 65535));
+        }
+
+        $account_db = helper_utils::get_account_db($account_id);
+        $object_ready = $this->_db->prepare_add_accounts($request_data, $account_id);
+
+        if($this->_db->add($account_db, $object_ready)) {
+            // Adding this account to the list.
+            $account_list[] = $account_id;
+            // And saving
+            if ($this->_db->update('providers', $provider_id, 'accounts', $account_list))
+                return array('status' => true, 'message' => 'Document successfully added');
+            else
+                throw new RestException(500, 'Could not link the new account with its provider');
+        } else 
+            throw new RestException(500, 'Could not create that account Database');
+            
+    }
     
     /**
      * This will allow the user to modify the account/phone settings
@@ -98,49 +146,6 @@ class Accounts {
 
         } else
             return array('status' => true, 'message' => 'Document successfully added');
-    }
-
-    /**
-     * This will allow the user to add an account or a phone
-     *
-     * @url PUT /{account_id}
-     * @access protected
-     * @class  AccessControlKazoo
-     */
-
-    function addDocument($account_id, $mac_address = null, $request_data = null) {
-        if (!$request_data) {
-            throw new RestException(400, "The body cannot be empty for this request");
-        }
-
-        // making sure that the mac_address is well formated
-        $mac_address = strtolower(preg_replace('/[:-]/', '', $mac_address));
-        $account_db = $this->_get_account_db($account_id);
-
-        if ($mac_address) {
-            if (!$this->_db->isDBexist($account_db)) {
-                return array('status' => false, 'message' => 'The account do not exist yet');
-            }
-        }
-
-        $object_ready = $this->_db->prepareAddAccounts($request_data, $account_db, $account_id, $mac_address);
-
-        if(!$this->_db->add($account_db, $object_ready)) {
-            throw new RestException(500, 'Error while saving');
-        } else {
-            if ($mac_address) {
-                if (!$this->_db->isDocExist('mac_lookup', $mac_address)) {
-                    $obj = array('_id' => $mac_address, 'account_id' => $account_id);
-                    if ($this->_db->add('mac_lookup', $obj)) {
-                        return array('status' => true, 'message' => 'Document successfully added');
-                    }
-                }
-                return array('status' => false, 'message' => 'Could not create the mac_lookup document');
-
-            } else {
-                return array('status' => true, 'message' => 'Document successfully added');
-            }
-        }
     }
 
     /**

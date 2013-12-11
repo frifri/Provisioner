@@ -35,7 +35,7 @@ class Accounts {
      * @class  AccessControlKazoo
      */
 
-    function retrieveDocument($account_id) {
+    function retrieve_document($account_id) {
         $account_db = helper_utils::get_account_db($account_id);
 
         if ($account_db) {
@@ -51,6 +51,31 @@ class Accounts {
     }
 
     /**
+     * This will allow the user to get the default settings for an account and for a phone 
+     *
+     * @url GET /provider/{provider_id}
+     * @access protected
+     * @class  AccessControlKazoo
+     */
+
+    function get_by_provider($provider_id) {
+        $account_doc_arr = array();
+        $account_list = $this->_db->get('providers', $provider_id)['accounts'];
+
+        foreach ($account_list as $account_id) {
+            $account_db = helper_utils::get_account_db($account_id);
+            $account_doc = $this->_db->get($account_db, $account_id);
+            $account_doc_arr['data'][] = $account_doc;
+        }
+
+        if (!empty($account_doc_arr))
+            return $account_doc_arr;
+        else
+            throw new RestException(404, "No account related to that provider were found");
+            
+    }
+
+    /**
      * This will allow the user to add an account or a phone
      *
      * @url PUT /
@@ -59,7 +84,7 @@ class Accounts {
      * @class  AccessControlKazoo
      */
 
-    function addDocument($request_data, $account_id = null) {
+    function add_document($request_data, $account_id = null) {
         $provider_id = helper_utils::get_param($request_data, 'provider_id', false);
 
         if (!$provider_id)

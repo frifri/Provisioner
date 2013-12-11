@@ -363,82 +363,36 @@ class wrapper_bigcouch {
 
     // Add - providers
     public function prepareAddProviders($request_data) {
-        $to_build = array();
-        $to_build['pvt_type'] = 'provider';
+        $finalObj = array();
+        $finalObj['pvt_type'] = 'provider';
 
-        if (!isset($request_data['authorized_ip']))
-            $to_build['authorized_ip'] = array("::1", "127.0.0.1");
-        else
-            $to_build['authorized_ip'] = $request_data['authorized_ip'];
+        $finalObj['authorized_ip'] = helper_utils::get_param($request_data, 'authorized_ip', array("::1", "127.0.0.1"));
+        $finalObj['default_account_id'] = helper_utils::get_param($request_data, 'default_account_id', null);
+        $finalObj['name'] = helper_utils::get_param($request_data, 'name', "Default provider name");
+        $finalObj['pvt_access_type'] = helper_utils::get_param($request_data, 'pvt_access_type', "user");
+        $finalObj['domain'] = helper_utils::get_param($request_data, 'domain', "default.domain.com");
+        $finalObj['settings'] = helper_utils::get_param($request_data, 'settings', '{}');
 
-        if (!isset($request_data['default_account_id']))
-            $to_build['default_account_id'] = null;
-        else
-            $to_build['default_account_id'] = $request_data['default_account_id'];
+        // No accounts are related to that provider yet so we need to initialize it.
+        $finalObj['accounts'] = array();
 
-        if (!isset($request_data['name']))
-            $to_build['name'] = "Default provider name";
-        else
-            $to_build['name'] = $request_data['name'];
-
-        if (!isset($request_data['pvt_access_type']))
-            $to_build['pvt_access_type'] = "user";
-        else
-            $to_build['pvt_access_type'] = $request_data['pvt_access_type'];
-
-        if (!isset($request_data['domain']))
-            $to_build['domain'] = "default.domain.com";
-        else
-            $to_build['domain'] = $request_data['domain'];
-
-        if (!isset($request_data['settings']))
-            $to_build['settings'] = '{}';
-        else
-            $to_build['settings'] = $request_data['settings'];
-
-        return $to_build;
+        return $finalObj;
     }
 
     // Add - accounts
-    public function prepareAddAccounts($request_data, $account_db, $account_id, $mac_address = null) {
+    public function prepare_add_accounts($request_data, $account_id) {
         $finalObj = array();
-
-        if ($mac_address) {
-            // We first need to make sure that the database is created
-            $brand = $request_data['provision']['endpoint_brand'];
-            $family = $request_data['provision']['endpoint_family'];
-            $model = $request_data['provision']['endpoint_model'];
-
-            // Set a random local port
-            $request_data['local_port'] = rand(4000, 65000);
-
-            // Set random port for RTP
-            $request_data['rtp_min_port'] = rand(5000, 65000);
-            $request_data['rtp_max_port'] = $request_data['rtp_min_port'] + 10;
-        }
-
-        // A couple of unset for useless value coming from kazoo
-        unset($request_data['available_apps']);
-        unset($request_data['apps']);
-        unset($request_data['billing_id']);
+        $account_db = helper_utils::get_account_db($account_id);
 
         $this->_set_client($account_db);
         if (!$this->_couch_client->databaseExists())
             $this->_couch_client->createDatabase();
 
-        // Device
-        if ($mac_address) {
-            $finalObj['_id'] = $mac_address;
-            $finalObj['brand'] = $brand;
-            $finalObj['family'] = $family;
-            $finalObj['model'] = $model;
-            $finalObj['settings'] = $request_data;
-        } else { // Account
-            $finalObj['_id'] = $account_id;
-            $finalObj['name'] = $request_data['name'];
-            $finalObj['settings'] = $request_data;
-            $finalObj['provider_id'] = $request_data['provider_id'];
-        }
+        $finalObj['_id'] = $account_id;
+        $finalObj['name'] = helper_utils::get_param($request_data, 'name', 'Default account name');
+        $finalObj['settings'] = helper_utils::get_param($request_data, 'settings', '{}');
+        // Here we can straight use that since we know we have one
+        $finalObj['provider_id'] = $request_data['provider_id'];
 
         return $finalObj;
     }

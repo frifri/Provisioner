@@ -11,33 +11,22 @@
  */
 
 class Phones {
-    public $db;
+    private $_db;
 
     private $_FIELDS = array('settings');
 
     function __construct() {
-        $this->db = new wrapper_bigcouch();
-    }
-
-    private function _buildDocumentName($brand, $family = null, $model = null) {
-        if ($model)
-            return $brand . "_" . $family . "_" . $model;
-        elseif ($family)
-            return $brand . "_" . $family;
-        elseif ($brand)
-            return $brand;
-        else
-            return false;
+        $this->_db = new wrapper_bigcouch();
     }
 
     private function _getAllPhonesInfo() {
-        $brands = $this->db->getAllByKey('factory_defaults', 'brand', null);
+        $brands = $this->_db->getAllByKey('factory_defaults', 'brand', null);
 
         foreach ($brands as $brand_key => $brand_content) {
-            $families = $this->db->getAllByKey('factory_defaults', 'family', $brand_key);
+            $families = $this->_db->getAllByKey('factory_defaults', 'family', $brand_key);
 
             foreach ($families as $family_key => $family_value) {
-                $models = $this->db->getAllByKey('factory_defaults', 'model', $family_key);
+                $models = $this->_db->getAllByKey('factory_defaults', 'model', $family_key);
 
                 if ($models)
                     $families[$family_key]['models'] = $models;
@@ -73,13 +62,13 @@ class Phones {
     function getElement($brand = null, $family = null, $model = null) {
         if (!$brand)
             $result['data'] = $this->_getAllPhonesInfo();
-            //$result = $this->db->getAllByKey('factory_defaults', 'brand', null);
+            //$result = $this->_db->getAllByKey('factory_defaults', 'brand', null);
         elseif (!$family)
-            $result['data'] = $this->db->getAllByKey('factory_defaults', 'family', $brand);
+            $result['data'] = $this->_db->getAllByKey('factory_defaults', 'family', $brand);
         elseif (!$model)
-            $result['data'] = $this->db->getAllByKey('factory_defaults', 'model', $family);
+            $result['data'] = $this->_db->getAllByKey('factory_defaults', 'model', $family);
         else
-            $result['data'] = $this->db->get('factory_defaults', $brand . '_' . $family . '_' . $model);
+            $result['data'] = $this->_db->get('factory_defaults', $brand . '_' . $family . '_' . $model);
 
         if (!empty($result))
             return $result;
@@ -101,14 +90,14 @@ class Phones {
         if (empty($request_data))
             throw new RestException(400, "The body for this request cannot be empty");
 
-        $document_name = $this->_buildDocumentName($brand, $family, $model);
+        $document_name = helper_utils::get_device_doc_name($brand, $family, $model);
         if (!$document_name)
             throw new RestException(400, "Could not find at least the brand");
 
         Validator::validateEdit($request_data, $this->_FIELDS);
 
         foreach ($request_data as $key => $value) {
-            if ($this->db->update('factory_defaults', $document_name, $key, $value))
+            if ($this->_db->update('factory_defaults', $document_name, $key, $value))
                 return array('status' => true, 'message' => 'Document successfully modified');
             else
                 throw new RestException(500, 'Error while modifying the data');
@@ -129,13 +118,13 @@ class Phones {
         if (empty($request_data))
             throw new RestException(400, "The body for this request cannot be empty");
 
-        $document_name = $this->_buildDocumentName($brand, $family, $model);
+        $document_name = helper_utils::get_device_doc_name($brand, $family, $model);
         if (!$document_name)
             throw new RestException(400, "Could not find at least the brand");
         
-        $object_ready = $this->db->prepareAddPhones($request_data, $document_name, $brand, $family, $model);
+        $object_ready = $this->_db->prepareAddPhones($request_data, $document_name, $brand, $family, $model);
 
-        if (!$this->db->add('factory_defaults', $object_ready))
+        if (!$this->_db->add('factory_defaults', $object_ready))
             throw new RestException(500, 'Error while Adding the data');
 
         return array('status' => true, 'message' => 'Document successfully added');
@@ -155,10 +144,8 @@ class Phones {
         // NOP, this is NOT OK for the wrapper. it is too specific.
         // I MUST find a way to use the delete() function instead of this one.
         // If I don't the other wrappers will need to implement this function as well.
-        $this->db->deleteView('factory_defaults', $brand, $family, $model);
+        $this->_db->deleteView('factory_defaults', $brand, $family, $model);
 
         return array('status' => true, 'message' => 'Document successfully deleted');
     }
 }
-
-?>

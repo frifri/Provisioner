@@ -151,50 +151,39 @@ class Accounts {
      * @class  AccessControlKazoo
      */
 
-    function delDocument($account_id, $mac_address = null) {
-        // making sure that the mac_address is well fornated
-        $mac_address = strtolower(preg_replace('/-/', '', $mac_address));
-        $account_db = $this->_get_account_db($account_id);
+    function delete_document($account_id) {
+        $account_db = helper_utils::get_account_db($account_id);
 
         // Let's first try of the account that we are trying to delete exist
         if ($this->_db->isDBexist($account_db)) {
-            // If we are trying to delete a device
-            if ($mac_address) {
-                // Let's check also if the device that we are trying to delete exist
-                if ($this->_db->isDocExist($account_db, $mac_address)) {
-                    // First we delete the device document
-                    if (!$this->_db->delete($account_db, $mac_address)) {
-                        throw new RestException(500, 'Error while deleting');
-                    } else {
-                        // Then we delete the device in the mac_lookup db
-                        if (!$this->_db->delete('mac_lookup', $mac_address)) {
-                            throw new RestException(500, 'Could not delete the lookup entry');
-                        }
+            $doc_list = $this->_db->getAll($account_db);
 
-                        return array('status' => true, 'message' => 'Document successfully deleted');
-                    }
-                } else
-                    throw new RestException(404, 'This device do not exist in this account');
-            } else { // If we are trying to delete an account
-
-                $doc_list = $this->_db->getAll($account_db);
-                // We get the document list inside of the account database
-                foreach ($doc_list['rows'] as $doc) {
-                    // /!\ Ghetto hack following...
-                    // We check the id of the document to know if it a device doc or the account doc
-                    if (preg_match("/^[a-f0-9]{12}$/i", $doc['id'])) {
-                        if (!$this->_db->delete('mac_lookup', $doc['id'])) {
-                            throw new RestException(500, 'Could not delete a lookup entry');
-                        }
+            // We get the document list inside of the account database
+            foreach ($doc_list['rows'] as $doc) {
+                // Check the id of the document to know if it is a device doc or the account doc
+                if (preg_match("/^[a-f0-9]{12}$/i", $doc['id'])) {
+                    // And delete the mac_lookup entry
+                    if (!$this->_db->delete('mac_lookup', $doc['id'])) {
+                        throw new RestException(500, 'Could not delete a lookup entry');
                     }
                 }
+            }
 
-                // And let's delete the account database then
-                if ($this->_db->delete($account_db)) {
-                    return array('status' => true, 'message' => 'Account successfully deleted');
-                } else {
-                    throw new RestException(500, 'Could not delete the account database');
-                }
+            // Now let's get the account doc for the provider_id
+            $provider_id = $this->_db->get($account_db, $account_id)['provider_id'];
+            $account_list = $this->_db->get('providers', $provider_id)['accounts'];
+
+            // Getting the position and deleting the element
+            $position = array_search($account_id, $account_list);
+            unset($account_list[$position])
+            // and then updating the array
+            $this->_db->update('providers', $provider_id, 'accounts', $account_list);
+
+            // And finally let's delete the account database
+            if ($this->_db->delete($account_db)) {
+                return array('status' => true, 'message' => 'Account successfully deleted');
+            } else {
+                throw new RestException(500, 'Could not delete the account database');
             }
         } else {
             throw new RestException(404, 'This account do not exist');

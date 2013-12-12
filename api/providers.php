@@ -10,10 +10,10 @@
  */
 
 class Providers {
-    public $db;
+    private $_db;
 
     function __construct() {
-        $this->db = new wrapper_bigcouch();
+        $this->_db = new wrapper_bigcouch();
     }
 
     /**
@@ -26,7 +26,7 @@ class Providers {
     function retrieveAll() {
         $result = array();
 
-        $result['data'] = $this->db->getAllByKey('providers', 'domain');
+        $result['data'] = $this->_db->getAllByKey('providers', 'domain');
         
         return $result;
     }
@@ -41,7 +41,7 @@ class Providers {
     function getOne($request_data, $provider_id) {
         $provider = array();
 
-        $provider['data'] = $this->db->get('providers', $provider_id);
+        $provider['data'] = $this->_db->get('providers', $provider_id);
 
         if ($provider)
             return $provider;
@@ -58,7 +58,7 @@ class Providers {
      */
     function update($request_data, $provider_id) {
         foreach ($request_data as $key => $value) {
-            if (!$this->db->update('providers', $provider_id, $key, $value))
+            if (!$this->_db->update('providers', $provider_id, $key, $value))
                 throw new RestException(500, 'Error while saving');
         }
 
@@ -73,8 +73,8 @@ class Providers {
      * @class  AccessControlKazoo
      */
     function create($request_data) {
-        $object_ready = $this->db->prepareAddProviders($request_data);
-        if (!$this->db->add('providers', $object_ready))
+        $object_ready = $this->_db->prepareAddProviders($request_data);
+        if (!$this->_db->add('providers', $object_ready))
             throw new RestException(500, 'Error while Adding');
         else
             return array('status' => true, 'message' => 'Provider successfully added');
@@ -89,7 +89,7 @@ class Providers {
      * @class  AccessControlKazoo
      */
     function delete($provider_id) {
-        if (!$this->db->delete('providers', $provider_id))
+        if (!$this->_db->delete('providers', $provider_id))
             throw new RestException(500, 'Error while deleting');
         else
             return array('status' => true, 'message' => 'Provider successfully deleted');

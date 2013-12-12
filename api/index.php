@@ -26,6 +26,7 @@ header('Access-Control-Max-Age:86400');
 $r = new Restler();
 $r->setSupportedFormats('JsonFormat');
 $r->addAPIClass('phones');
+$r->addAPIClass('devices');
 $r->addAPIClass('providers');
 $r->addAPIClass('accounts');
 $r->addAPIClass('users');

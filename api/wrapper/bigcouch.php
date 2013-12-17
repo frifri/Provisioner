@@ -396,4 +396,17 @@ class wrapper_bigcouch {
 
         return $finalObj;
     }
+
+    public function prepare_add_device($request_data, $mac_address) {
+        $finalObj = array();
+
+        $finalObj['_id'] = $mac_address;
+        $finalObj['brand'] = $request_data['brand'];
+        $finalObj['family'] = $request_data['family'];
+        $finalObj['model'] = $request_data['model'];
+        $finalObj['name'] = helper_utils::get_param($request_data, 'name', "Default device name");
+        $finalObj['settings'] = helper_utils::get_param($request_data, 'settings', '{}';
+
+        return $finalObj;
+    }
 }

@@ -133,7 +133,6 @@ class Accounts {
 
     function editDocument($request_data, $account_id) {
         $account_db = helper_utils::get_account_db($account_id);
-        $current_doc = $this->_db->get($account_db, $account_id);
 
         foreach ($request_data as $key => $value) {
             if (!$this->_db->update($account_db, $account_id, $key, $value))
@@ -175,7 +174,7 @@ class Accounts {
 
             // Getting the position and deleting the element
             $position = array_search($account_id, $account_list);
-            unset($account_list[$position])
+            unset($account_list[$position]);
             // and then updating the array
             $this->_db->update('providers', $provider_id, 'accounts', $account_list);
 

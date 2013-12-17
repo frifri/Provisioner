@@ -413,6 +413,52 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface
     }
 }
 
+interface Twig_ExistsLoaderInterface
+{
+    /**
+     * Check if we have the source code of a template, given its name.
+     *
+     * @param string $name The name of the template to check if we can load
+     *
+     * @return boolean If the template source code is handled by this loader or not
+     */
+    public function exists($name);
+}
+
+class Twig_Loader_String implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getSource($name)
+    {
+        return $name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exists($name)
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCacheKey($name)
+    {
+        return $name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isFresh($name, $time)
+    {
+        return true;
+    }
+}
 
 
 /*

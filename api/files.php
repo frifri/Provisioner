@@ -33,7 +33,7 @@ class Files {
      *
      * @url POST /generate
      * @access protected
-     * @class  AccessControl {@requires admin}
+     * @class  AccessControlKazoo
      */
     function generate_files($request_data) {
         $this->_log->logInfo(' - Entering generate_files (/generate) - ');

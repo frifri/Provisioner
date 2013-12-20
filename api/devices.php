@@ -92,7 +92,7 @@ class Devices {
                 throw new RestException(500, "Failed to create the mac_lookup entry. Did not create the device");
             }
 
-            return array('status' => 'sucess', 'message' => 'Device added successfully')
+            return array('status' => 'sucess', 'message' => 'Device added successfully');
         } else
             throw new RestException(500, "Failed to create the device object in the account db");
     }
@@ -115,7 +115,7 @@ class Devices {
                 throw new RestException(500, "Error while updating the doc");
         }
 
-        return array('status' => 'sucess', 'message' => 'Device updated successfully') 
+        return array('status' => 'sucess', 'message' => 'Device updated successfully');
     }
 
     /**
@@ -135,7 +135,7 @@ class Devices {
             if (!$this->_db->delete($account_db, $mac_address))
                 throw new RestException(500, "Could not delete the device doc in the account db");
             else
-                return array('status' => 'sucess', 'message' => 'Device deleted successfully')
+                return array('status' => 'sucess', 'message' => 'Device deleted successfully');
         } else
             throw new RestException(500, "Could not delete the mac lookup entry");
             

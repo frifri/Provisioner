@@ -49,19 +49,19 @@
   <Debug_Server ua="na"></Debug_Server>
   <Debug_Level ua="na">0</Debug_Level> <!-- options: 0/1/2/3 -->
   <Layer_2_Logging ua="na">No</Layer_2_Logging>
-  <Primary_NTP_Server ua="na">time.nist.gov</Primary_NTP_Server>
-  <Secondary_NTP_Server ua="na">time-a.nist.gov</Secondary_NTP_Server>
+  <Primary_NTP_Server ua="na">{{ ntp_server.primary }}</Primary_NTP_Server>
+  <Secondary_NTP_Server ua="na">{{ ntp_server.backup }}</Secondary_NTP_Server>
 
   <!-- VLAN Settings -->
 
-  <Enable_VLAN ua="rw">No</Enable_VLAN>
+  <Enable_VLAN ua="rw">{{ vlan.enable }}</Enable_VLAN>
   <Enable_CDP ua="na">Yes</Enable_CDP>
   <Enable_LLDP-MED ua="na">Yes</Enable_LLDP-MED>
   <Network_Startup_Delay ua="na">3</Network_Startup_Delay>
-  <VLAN_ID ua="rw">1</VLAN_ID>
+  <VLAN_ID ua="rw">{{ vlan.vid }}</VLAN_ID>
   <PC_Port_VLAN_Highest_Priority ua="na">No Limit</PC_Port_VLAN_Highest_Priority> <!-- options: 0/1/2/3/4/5/6/7/No Limit -->
   <Enable_PC_Port_VLAN_Tagging ua="na">No</Enable_PC_Port_VLAN_Tagging>
-  <PC_Port_VLAN_ID ua="na">1</PC_Port_VLAN_ID>
+  <PC_Port_VLAN_ID ua="na">{{ vlan.pc.vid }}</PC_Port_VLAN_ID>
 
   <!-- Inventory Settings -->
 
@@ -120,7 +120,7 @@
   <Hold_Package ua="na">No</Hold_Package>
   <Conference_Package ua="na">No</Conference_Package>
   <Notify_Conference ua="na">No</Notify_Conference>
-  <RFC_2543_Call_Hold ua="na">Yes</RFC_2543_Call_Hold>
+  <RFC_2543_Call_Hold ua="na">{{ rfc2543_hold }}</RFC_2543_Call_Hold>
   <Random_REG_CID_On_Reboot ua="na">No</Random_REG_CID_On_Reboot>
   <Mark_All_AVT_Packets ua="na">Yes</Mark_All_AVT_Packets>
   <SIP_TCP_Port_Min ua="na">5060</SIP_TCP_Port_Min>
@@ -167,8 +167,8 @@
 
   <!-- RTP Parameters -->
 
-  <RTP_Port_Min ua="na">{{ rtp_min_port|default('11780') }}</RTP_Port_Min>
-  <RTP_Port_Max ua="na">{{ rtp_max_port|default('11780') }}</RTP_Port_Max>
+  <RTP_Port_Min ua="na">{{ min_rtp_port|default('11780') }}</RTP_Port_Min>
+  <RTP_Port_Max ua="na">{{ max_rtp_port|default('11780') }}</RTP_Port_Max>
   <RTP_Packet_Size ua="na">0.020</RTP_Packet_Size>
   <Max_RTP_ICMP_Err ua="na">0</Max_RTP_ICMP_Err>
   <RTCP_Tx_Interval ua="na">0</RTCP_Tx_Interval>
@@ -210,9 +210,9 @@
   <Insert_VIA_rport ua="na">No</Insert_VIA_rport>
   <Substitute_VIA_Addr ua="na">No</Substitute_VIA_Addr>
   <Send_Resp_To_Src_Port ua="na">No</Send_Resp_To_Src_Port>
-  <STUN_Enable ua="na">No</STUN_Enable>
+  <STUN_Enable ua="na">{{ stun.enable }}</STUN_Enable>
   <STUN_Test_Enable ua="na">No</STUN_Test_Enable>
-  <STUN_Server ua="na"></STUN_Server>
+  <STUN_Server ua="na">{{ stun.host }}</STUN_Server>
   <EXT_IP ua="na"></EXT_IP>
   <EXT_RTP_Port_Min ua="na"></EXT_RTP_Port_Min>
   <NAT_Keep_Alive_Intvl ua="na">15</NAT_Keep_Alive_Intvl>
@@ -230,11 +230,11 @@
   
   <!-- General -->
 
-  <Line_Enable_{{ x }}_ ua="na">Yes</Line_Enable_{{ x }}_>
+  <Line_Enable_{{ x }}_ ua="na">{{ line.enable }}</Line_Enable_{{ x }}_>
 
   <!-- Share Line Appearance -->
 
-  <Share_Ext_{{ x }}_ ua="na">private</Share_Ext_{{ x }}_> <!-- options: private/shared -->
+  <Share_Ext_{{ x }}_ ua="na">{{ line.type }}</Share_Ext_{{ x }}_> <!-- options: private/shared -->
   <Shared_User_ID_{{ x }}_ ua="na"></Shared_User_ID_{{ x }}_>
   <Subscription_Expires_{{ x }}_ ua="na">{{ line.expire|default('60') }}</Subscription_Expires_{{ x }}_>
   <Restrict_MWI_{{ x }}_ ua="na">No</Restrict_MWI_{{ x }}_>
@@ -242,7 +242,7 @@
 
   <!-- NAT Settings -->
 
-  <NAT_Mapping_Enable_{{ x }}_ ua="na">No</NAT_Mapping_Enable_{{ x }}_>
+  <NAT_Mapping_Enable_{{ x }}_ ua="na">{{ line.nat_traversal }}</NAT_Mapping_Enable_{{ x }}_>
   <NAT_Keep_Alive_Enable_{{ x }}_ ua="na">Yes</NAT_Keep_Alive_Enable_{{ x }}_>
   <NAT_Keep_Alive_Msg_{{ x }}_ ua="na">$NOTIFY</NAT_Keep_Alive_Msg_{{ x }}_>
   <NAT_Keep_Alive_Dest_{{ x }}_ ua="na">$PROXY</NAT_Keep_Alive_Dest_{{ x }}_>
@@ -258,8 +258,8 @@
 
   <!-- SIP Settings -->
 
-  <SIP_Transport_{{ x }}_ ua="na">UDP</SIP_Transport_{{ x }}_> <!-- options: UDP/TCP/TLS -->
-  <SIP_Port_{{ x }}_ ua="na">{{ local_port }}</SIP_Port_{{ x }}_>
+  <SIP_Transport_{{ x }}_ ua="na">{{ line.transport|default('UDP') }}</SIP_Transport_{{ x }}_> <!-- options: UDP/TCP/TLS -->
+  <SIP_Port_{{ x }}_ ua="na">{{ line.local_sip_port }}</SIP_Port_{{ x }}_>
   <SIP_100REL_Enable_{{ x }}_ ua="na">No</SIP_100REL_Enable_{{ x }}_>
   <EXT_SIP_Port_{{ x }}_ ua="na"></EXT_SIP_Port_{{ x }}_>
   <Auth_Resync-Reboot_{{ x }}_ ua="na">Yes</Auth_Resync-Reboot_{{ x }}_>
@@ -304,7 +304,7 @@
   <Outbound_Proxy_{{ x }}_ ua="na">{{ line.outbound_proxy.primary.host }}</Outbound_Proxy_{{ x }}_>
   <Alternate_Proxy_{{ x }}_ ua="na">{{ line.sip_server.backup.host }}</Alternate_Proxy_{{ x }}_>
   <Alternate_Outbound_Proxy_{{ x }}_ ua="na">{{ line.outbound_proxy.backup.host }}</Alternate_Outbound_Proxy_{{ x }}_>
-  <Use_Outbound_Proxy_{{ x }}_ ua="na">Yes</Use_Outbound_Proxy_{{ x }}_>
+  <Use_Outbound_Proxy_{{ x }}_ ua="na">{{ line.outbound_proxy.enable|default('Yes') }}</Use_Outbound_Proxy_{{ x }}_>
   <Use_OB_Proxy_In_Dialog_{{ x }}_ ua="na">Yes</Use_OB_Proxy_In_Dialog_{{ x }}_>
   <Register_{{ x }}_ ua="na">Yes</Register_{{ x }}_>
   <Make_Call_Without_Reg_{{ x }}_ ua="na">No</Make_Call_Without_Reg_{{ x }}_>
@@ -329,10 +329,10 @@
 
   <!-- Audio Configuration -->
 
-  <Preferred_Codec_{{ x }}_ ua="na">{{ codecs.0 }}</Preferred_Codec_{{ x }}_> <!-- options: G711u/G711a/G726-16/G726-24/G726-32/G726-40/G729a/G722 -->
+  <Preferred_Codec_{{ x }}_ ua="na">{{ line.codecs.audio.0 }}</Preferred_Codec_{{ x }}_> <!-- options: G711u/G711a/G726-16/G726-24/G726-32/G726-40/G729a/G722 -->
   <Use_Pref_Codec_Only_{{ x }}_ ua="na">No</Use_Pref_Codec_Only_{{ x }}_>
-  <Second_Preferred_Codec_{{ x }}_ ua="na">{{ codecs.1|default('Unspecified') }}</Second_Preferred_Codec_{{ x }}_> <!-- options: Unspecified/G711u/G711a/G726-16/G726-24/G726-32/G726-40/G729a/G722 -->
-  <Third_Preferred_Codec_{{ x }}_ ua="na">{{ codecs.2|default('Unspecified') }}</Third_Preferred_Codec_{{ x }}_> <!-- options: Unspecified/G711u/G711a/G726-16/G726-24/G726-32/G726-40/G729a/G722 -->
+  <Second_Preferred_Codec_{{ x }}_ ua="na">{{ line.codecs.audio.1|default('Unspecified') }}</Second_Preferred_Codec_{{ x }}_> <!-- options: Unspecified/G711u/G711a/G726-16/G726-24/G726-32/G726-40/G729a/G722 -->
+  <Third_Preferred_Codec_{{ x }}_ ua="na">{{ line.codecs.audio.2|default('Unspecified') }}</Third_Preferred_Codec_{{ x }}_> <!-- options: Unspecified/G711u/G711a/G726-16/G726-24/G726-32/G726-40/G729a/G722 -->
   <G729a_Enable_{{ x }}_ ua="na">Yes</G729a_Enable_{{ x }}_>
   <G723_Enable_{{ x }}_ ua="na">Yes</G723_Enable_{{ x }}_>
   <G722_Enable_{{ x }}_ ua="na">Yes</G722_Enable_{{ x }}_>

@@ -242,6 +242,20 @@
         ]
     },
 
+    "vvx400": {
+        "folder": "spipm",
+        "config_files": [
+            "$mac.cfg",
+            "$mac_reg.cfg",
+            "000000000000-directory.xml"
+        ],
+        "regexs": [
+            "/[0-9a-f]{12}\\.cfg$/i",
+            "/[0-9a-f]{12}_reg\\.cfg$/i",
+            "/[a-fA-F0-9]{12}-directory\\.xml$/i"
+        ]
+    },
+
     "vvx500": {
         "folder": "spipm",
         "config_files": [

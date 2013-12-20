@@ -133,27 +133,27 @@ class adapter_2600hz_adapter {
             // Retrieve the settings (meaning a first merged object)
             $merged_settings = $config_manager->get_merged_config_objects();
 
-            $log->logInfo('Loading Twig...');
+            /*$log->logInfo('Loading Twig...');
             $loader = new Twig_Loader_Filesystem(PROVISIONER_BASE . 'adapter/2600hz/');
             $objTwig = new Twig_Environment($loader);
             $log->logInfo('Twig loaded!');
 
-            $log->logInfo('Building lines settings...');
+            $log->logInfo('Building lines settings...');*/
 
             //echo PROVISIONER_BASE . 'adapter/2600hz/' . $brand_doc_name . '.json';
             //exit();
 
             // Yeah, let's choose the right template
-            if (file_exists(PROVISIONER_BASE . 'adapter/2600hz/' . $brand_doc_name . '.json'))
+            /*if (file_exists(PROVISIONER_BASE . 'adapter/2600hz/' . $brand_doc_name . '.json'))
                 $master_template = $brand_doc_name . '.json';
             elseif(file_exists(PROVISIONER_BASE . 'adapter/2600hz/' . $family_doc_name . '.json'))
                 $master_template = $family_doc_name . '.json';
             elseif(file_exists(PROVISIONER_BASE . 'adapter/2600hz/' . $model_doc_mame . '.json'))
                 $master_template = $model_doc_mame . '.json';
             else
-                $master_template = 'master.json';
+                $master_template = 'master.json';*/
 
-            // Building lines settings
+            /*// Building lines settings
             $line_settings = json_decode($objTwig->render($master_template, $merged_settings), true);
 
             if (!$line_settings) {
@@ -163,7 +163,7 @@ class adapter_2600hz_adapter {
 
             $log->logInfo('Remerging everything...');
             // Remerge everything
-            $merged_settings = array_merge($merged_settings, $line_settings);
+            $merged_settings = array_merge($merged_settings, $line_settings);*/
             
             $log->logInfo('Reassigning merge object into the config manager at key 0...');
             $config_manager->set_settings($merged_settings, false);

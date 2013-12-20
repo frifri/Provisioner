@@ -405,7 +405,9 @@ class wrapper_bigcouch {
         $finalObj['family'] = $request_data['family'];
         $finalObj['model'] = $request_data['model'];
         $finalObj['name'] = helper_utils::get_param($request_data, 'name', "Default device name");
-        $finalObj['settings'] = helper_utils::get_param($request_data, 'settings', '{}';
+        $finalObj['settings'] = helper_utils::get_param($request_data, 'settings', '{}');
+
+        // Local_sip_port are generated here
 
         return $finalObj;
     }

@@ -44,16 +44,60 @@ if (strtolower($configs->database->type) == "bigcouch") {
 
     $list = array(
         "yealink" => array(
+            "t1x" => array(
+                "t18"
+            ),
+            "t2x" => array(
+                "t20", "t22", "t26", "t28"
+            ),
             "t3x" => array(
-                "t32", "t36"
+                "t32", "t38" 
             ),
             "t4x" => array(
-                "t46", "t48"
+                "t46", "t42"
+            ),
+            "wxx" => array(
+                "w52"
             )
         ),
         "polycom" => array(
             "spipm" => array(
-                "550", "335"
+                "321", "331", "335", "450", "550", "560", "650", "670", "1500", "6000", "7000", "vvx300", "vvx400", "vvx500", "vvx600"
+            ),
+            "firmware325" => array(
+                "430"
+            ),
+            "firmware3333" => array(
+                "320", "330"
+            ),
+            "splm" => array(
+                "301", "501", "600", "601", "4000"
+            ),
+            "spom" => array(
+                "300", "500"
+            )
+        ),
+        "snom" => array(
+            "7xx" => array(
+                "710", "720", "760"
+            )
+        ),
+        "cisco" => array(
+            "spa" => array(
+                "901", "921", "922", "941", "942", "962"
+            ),
+            "spa5xx" => array(
+                "303", "501g", "502g", "504g", "525g", "525g2"
+            )
+        ),
+        "audiocodes" => array(
+            "4xx" => array(
+                "420"
+            )
+        ),
+        "mocet" => array(
+            "3xxx" => array(
+                "3062", "3092"
             )
         )
     );

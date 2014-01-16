@@ -83,6 +83,18 @@ if (strtolower($configs->database->type) == "bigcouch") {
             )
         ),
         "cisco" => array(
+            "ata18x" => array(
+                "186", "188"
+            ),
+            "linksysata" => array(
+                "ag310", "pap2t", "rtp300", "spa1001", "spa2102", "spa3102", "spa8000", "wrp400", "wrtp54g", "wrtp54g2"
+            ),
+            "sip79x1g" => array(
+                "7940g", "7941g", "7961g"
+            ),
+            "sip79xx" => array(
+                "7940", "7960"
+            ),
             "spa" => array(
                 "901", "921", "922", "941", "942", "962"
             ),

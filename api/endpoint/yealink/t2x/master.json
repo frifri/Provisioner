@@ -1,0 +1,98 @@
+{
+    "lines": [
+        {
+            "enable" : "",
+            "display_name": "",
+            "username": "",
+            "auth_name": "",
+            "auth_password": "",
+
+            "sip_server": {
+                "primary": {
+                    "host": "",
+                    "port": "5060"
+                },
+                "backup": {
+                    "host": null,
+                    "port": null
+                }
+            },
+
+            "expire": "",
+
+            "outbound_proxy": {
+                "enable": "",
+                "primary": {
+                    "host": "",
+                    "port": ""
+                },
+                "backup": {
+                    "host": "",
+                    "port": ""
+                }
+            },
+
+            "voicemail_number": "",
+            "srtp": 0,
+            "subscribe_mwi": 0,
+            "session_expires": 0,
+            "transport": 0,
+            "directory_url": null,
+
+            "codecs": {
+                "audio": [
+                    "pcmu",
+                    "pcma"
+                ]
+            },
+
+            "min_rtp_port": 11780,
+            "max_rtp_port": 11800,
+
+            "udp_keepalive": {
+                "enable": 1,
+                "interval": 30
+            },
+
+            "nat_traversal": 0,
+            "stun": {
+                "host": null,
+                "port": null
+            },
+
+            "missedcall_log": 1
+        }
+    ],
+
+    "vlan": {
+        "enable": "",
+        "vid": "",
+        "priority": "",
+
+        "pc": {
+            "enable": 0,
+            "vid": null,
+            "priority": 0
+        }
+    },
+
+    "hotline": "",
+
+    "password": {
+        "admin": null,
+        "user": null
+    },
+
+    "auto_provisioning": {
+        "mode": 4,
+        "interval": 10
+    },
+
+    "rfc2543_hold": 1,
+    "timezone": "-8",
+
+    "ntp_server": {
+        "primary": "north-america.pool.ntp.org",
+        "backup": "pool.ntp.org"
+    }
+}

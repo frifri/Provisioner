@@ -1,9 +1,8 @@
 language: php
 php:
-  - 5.2
   - 5.3
   - 5.4
-script: phpunit tests/phpunittests
+script: phpunit api/tests
 
 notifications:
   irc: "irc.freenode.org#provisioner"

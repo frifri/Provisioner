@@ -1,2 +1,16 @@
 setup.php
+/api/master.json
+config_sample.json
 temp/
+logs/log*
+api/logs/log*
+
+# Polycom
+api/endpoint/polycom/firmware325/
+api/endpoint/polycom/firmware3333/
+api/endpoint/polycom/ptx151/
+api/endpoint/polycom/splm/
+api/endpoint/polycom/spom/
+
+.DS_Store
+/nbproject/private/

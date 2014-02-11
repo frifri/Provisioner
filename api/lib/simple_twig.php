@@ -215,6 +215,15 @@ class Twig_Error_Loader extends Twig_Error
 {
 }
 
+/**
+ * Exception thrown when a syntax error occurs during lexing or parsing of a template.
+ *
+ * @author Fabien Potencier <fabien@symfony.com>
+ */
+class Twig_Error_Syntax extends Twig_Error
+{
+}
+
 
 /**
  * Loads template from the filesystem.
@@ -3844,6 +3853,61 @@ abstract class Twig_Node_Expression extends Twig_Node
 {
 }
 
+/**
+ * Represents an if node.
+ *
+ * @author Fabien Potencier <fabien@symfony.com>
+ */
+class Twig_Node_If extends Twig_Node
+{
+    public function __construct(Twig_NodeInterface $tests, Twig_NodeInterface $else = null, $lineno, $tag = null)
+    {
+        parent::__construct(array('tests' => $tests, 'else' => $else), array(), $lineno, $tag);
+    }
+
+    /**
+     * Compiles the node to PHP.
+     *
+     * @param Twig_Compiler A Twig_Compiler instance
+     */
+    public function compile(Twig_Compiler $compiler)
+    {
+        $compiler->addDebugInfo($this);
+        for ($i = 0, $count = count($this->getNode('tests')); $i < $count; $i += 2) {
+            if ($i > 0) {
+                $compiler
+                    ->outdent()
+                    ->write("} elseif (")
+                ;
+            } else {
+                $compiler
+                    ->write('if (')
+                ;
+            }
+
+            $compiler
+                ->subcompile($this->getNode('tests')->getNode($i))
+                ->raw(") {\n")
+                ->indent()
+                ->subcompile($this->getNode('tests')->getNode($i + 1))
+            ;
+        }
+
+        if ($this->hasNode('else') && null !== $this->getNode('else')) {
+            $compiler
+                ->outdent()
+                ->write("} else {\n")
+                ->indent()
+                ->subcompile($this->getNode('else'))
+            ;
+        }
+
+        $compiler
+            ->outdent()
+            ->write("}\n");
+    }
+}
+
 
 /*
  * This file is part of Twig.
@@ -4951,6 +5015,15 @@ class Twig_Node_Expression_Binary_Add extends Twig_Node_Expression_Binary
     }
 }
 
+
+
+class Twig_Node_Expression_Binary_NotEqual extends Twig_Node_Expression_Binary
+{
+    public function operator(Twig_Compiler $compiler)
+    {
+        return $compiler->raw('!=');
+    }
+}
 
 /**
  * Represents a set node.
@@ -9477,5 +9550,109 @@ abstract class Twig_Template implements Twig_TemplateInterface
     static public function clearCache()
     {
         self::$cache = array();
+    }
+}
+
+/**
+ * Represents a callable template test.
+ *
+ * @author Fabien Potencier <fabien@symfony.com>
+ * @deprecated since 1.12 (to be removed in 2.0)
+ */
+interface Twig_TestCallableInterface
+{
+    public function getCallable();
+}
+
+/**
+ * Represents a template test.
+ *
+ * @author Fabien Potencier <fabien@symfony.com>
+ * @deprecated since 1.12 (to be removed in 2.0)
+ */
+interface Twig_TestInterface
+{
+    /**
+     * Compiles a test.
+     *
+     * @return string The PHP code for the test
+     */
+    public function compile();
+}
+
+/**
+ * Represents a template test.
+ *
+ * @author Fabien Potencier <fabien@symfony.com>
+ * @deprecated since 1.12 (to be removed in 2.0)
+ */
+abstract class Twig_Test implements Twig_TestInterface, Twig_TestCallableInterface
+{
+    protected $options;
+    protected $arguments = array();
+
+    public function __construct(array $options = array())
+    {
+        $this->options = array_merge(array(
+            'callable' => null,
+        ), $options);
+    }
+
+    public function getCallable()
+    {
+        return $this->options['callable'];
+    }
+}
+
+
+/**
+ * Represents a template test as a Node.
+ *
+ * @author Fabien Potencier <fabien@symfony.com>
+ * @deprecated since 1.12 (to be removed in 2.0)
+ */
+class Twig_Test_Node extends Twig_Test
+{
+    protected $class;
+
+    public function __construct($class, array $options = array())
+    {
+        parent::__construct($options);
+
+        $this->class = $class;
+    }
+
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    public function compile()
+    {
+    }
+}
+
+/**
+ * Represents a function template test.
+ *
+ * @author Fabien Potencier <fabien@symfony.com>
+ * @deprecated since 1.12 (to be removed in 2.0)
+ */
+class Twig_Test_Function extends Twig_Test
+{
+    protected $function;
+
+    public function __construct($function, array $options = array())
+    {
+        $options['callable'] = $function;
+
+        parent::__construct($options);
+
+        $this->function = $function;
+    }
+
+    public function compile()
+    {
+        return $this->function;
     }
 }

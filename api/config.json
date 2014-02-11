@@ -1,27 +1,27 @@
 {
-    "version": "5.4.2",
-    "static_data_source": "database",
-    "adapter": "generic",
-    "db_prefix": "",
-    "custom_http_port": "",
+	"version": "5.5.0",
+	"static_data_source": "database",
+	"adapter": "2600hz",
+	"db_prefix": "",
+	"custom_http_port": "8888",
 
-    "paths": {
-        "root": "/myprovisionerfolder/",
-        "endpoint": "/endpoint/",
-        "firmwares": "http://my.domain.com/firmware/"
-    },
-    
-    "database": {
-        "type": "bigcouch",
-        "url": "http://my.bigcouch-server.com",
-        "port": 5984,
-        "username": "",
-        "password": "",
+	"paths": {
+		"root": "/",
+		"endpoint": "/endpoint/",
+		"firmwares": "http://my.domain.com/firmware/"
+	},
+	
+	"database": {
+		"type": "bigcouch",
+		"url": "http://10.26.0.221",
+		"port": 15984,
+		"username": "",
+		"password": "",
 
-        "master_provider": {
-            "name": "Master provider",
-            "ip": "MyIP",
-            "domain": "MyDomain"
-        }
-    }
+		"master_provider": {
+			"name": "Master provider",
+			"ip": ["MyIP", "AnotherIP"],
+			"domain": "MyDomain"
+		}
+	}
 }

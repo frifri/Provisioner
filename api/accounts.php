@@ -21,6 +21,8 @@ class Accounts {
      * This will handle the options requests
      *
      * @url OPTIONS /{account_id}
+     * @url OPTIONS /provider/{provider_id}
+     * @url OPTIONS /
      */
 
     function options() {
@@ -51,7 +53,7 @@ class Accounts {
     }
 
     /**
-     * This will allow the user to get the default settings for an account and for a phone 
+     * This will allow the user to get the accounts related to a provider 
      *
      * @url GET /provider/{provider_id}
      * @access protected
@@ -65,6 +67,9 @@ class Accounts {
         foreach ($account_list as $account_id) {
             $account_db = helper_utils::get_account_db($account_id);
             $account_doc = $this->_db->get($account_db, $account_id);
+            // This is ugly but huh...
+            $account_doc['id'] = $account_id;
+
             $account_doc_arr['data'][] = $account_doc;
         }
 
@@ -76,7 +81,7 @@ class Accounts {
     }
 
     /**
-     * This will allow the user to add an account or a phone
+     * This will allow the user to add an account
      *
      * @url PUT /
      * @url PUT /{account_id}
@@ -115,7 +120,10 @@ class Accounts {
             $account_list[] = $account_id;
             // And saving
             if ($this->_db->update('providers', $provider_id, 'accounts', $account_list))
-                return array('status' => true, 'message' => 'Document successfully added');
+                return array(
+                    'status' => true,
+                    'message' => 'Document successfully added',
+                    'id' => $account_id);
             else
                 throw new RestException(500, 'Could not link the new account with its provider');
         } else 
@@ -124,7 +132,7 @@ class Accounts {
     }
     
     /**
-     * This will allow the user to modify the account/phone settings
+     * This will allow the user to modify the account settings
      *
      * @url POST /{account_id}
      * @access protected

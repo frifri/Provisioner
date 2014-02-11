@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Represent the config file class that will merge / load / return the requested config file
+ * Represent the config file class that will send back the JSON payload
+ * used to draw the UI.
  *
  * @author Francis Genet
  * @license MPL / GPLv2 / LGPL
@@ -27,7 +28,7 @@ class Ui {
     /**
      *  The Options request handler
      *
-     * @url OPTIONS /
+     * @url OPTIONS /{brand}/{model}
      */
     function options() {
         return;
@@ -65,14 +66,11 @@ class Ui {
     /**
      * Will send back the template for a specific device
      *
-     * @url GET /
+     * @url GET /{account_id}/{mac_address}
      * @access protected
      * @class  AccessControlKazoo
      */
-    function get_specific_template($request_data) {
-        $account_id = $request_data['account_id'];
-        $mac_address = $request_data['mac_address'];
-
+    function get_specific_template($request_data, $account_id, $mac_address) {
         $account_db = helper_utils::get_account_db($account_id);
         $device_doc = $this->_db->get($account_db, $mac_address);
 

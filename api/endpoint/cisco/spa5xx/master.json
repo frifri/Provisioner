@@ -1,0 +1,98 @@
+{
+    "lines": [
+        {
+            "enable" : "Yes",
+            "display_name": "",
+            "username": "",
+            "auth_name": "",
+            "auth_password": "",
+
+            "sip_server": {
+                "primary": {
+                    "host": "",
+                    "port": "5060"
+                },
+                "backup": {
+                    "host": null,
+                    "port": null
+                }
+            },
+
+            "type": "private",
+            "expire": "",
+
+            "outbound_proxy": {
+                "enable": "Yes",
+                "primary": {
+                    "host": "",
+                    "port": ""
+                },
+                "backup": {
+                    "host": "",
+                    "port": ""
+                }
+            },
+
+            "voicemail_number": "",
+            "srtp": 0,
+            "subscribe_mwi": 0,
+            "session_expires": 0,
+            "transport": null,
+            "directory_url": null,
+
+            "codecs": {
+                "audio": [
+                    "G711u",
+                    "G711a"
+                ]
+            },
+
+            "udp_keepalive": {
+                "enable": 1,
+                "interval": 30
+            },
+
+            "nat_traversal": "No",
+            "missedcall_log": 1,
+            "local_sip_port": 5060
+        }
+    ],
+
+    "min_rtp_port": 11780,
+    "max_rtp_port": 11800,
+
+    "stun": {
+        "enable": "No",
+        "host": null
+    },
+
+    "vlan": {
+        "enable": "No",
+        "vid": "1",
+        "priority": "",
+
+        "pc": {
+            "enable": 0,
+            "vid": null,
+            "priority": 0
+        }
+    },
+
+    "hotline": {
+        "enable": 0,
+        "number": null
+    },
+
+    "password": {
+        "admin": null,
+        "user": null
+    },
+
+    "rfc2543_hold": "Yes",
+    "timezone": "-8",
+
+    "ntp_server": {
+        "primary": "north-america.pool.ntp.org",
+        "backup": "pool.ntp.org"
+    }
+}

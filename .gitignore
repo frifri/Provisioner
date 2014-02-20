@@ -12,5 +12,7 @@ api/endpoint/polycom/ptx151/
 api/endpoint/polycom/splm/
 api/endpoint/polycom/spom/
 
+*.sublime-*
+
 .DS_Store
 /nbproject/private/

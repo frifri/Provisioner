@@ -15,6 +15,7 @@ require_once LIB_BASE . 'KLogger.php';
 class Files {
 	private $_settings;
 	private $_log;
+	private $_db;
 
 	function __construct() {
 		// First load the settings
@@ -22,6 +23,9 @@ class Files {
 
 		// Logger
 		$this->_log = KLogger::instance(LOGS_BASE, Klogger::DEBUG);
+
+		// Bigcouch_wrapper
+		$this->_db = new wrapper_bigcouch();
 	}
 
 	/**
@@ -43,24 +47,30 @@ class Files {
 	 *
 	 * @url POST /generate
 	 * @access protected
-	 * @class  AccessControlKazoo
+	 * @class  AccessControlKazoo {@requires account}
 	 */
 	function generate_files($request_data) {
 		$this->_log->logInfo(' - Entering generate_files (/generate) - ');
 		$request_data = $request_data['data'];
+		$mac_address = strtolower($request_data['mac_address']);
 
 		$this->_log->logDebug("Loading adapter");
 		$adapter_name = "adapter_" . $this->_settings->adapter . "_adapter";
 		$adapter = new $adapter_name();
+
+		// So here we are going to retrieve the provider_id
+		// First, let's get the account.. The provider_id should be there
+		$account_id = $this->_db->get('mac_lookup', $mac_address)['account_id'];
+		$account_db = helper_utils::get_account_db($account_id);
+		$provider_id = $this->_db->get($account_db, $account_id)['provider_id'];
 
 		// This grab the settings from whatever datasource you want.
 		// Can set the settings to nothing if the only settings that you need
 		// to use are comming from the payload of this API
 		$this->_log->logDebug("Loading the config_manager...");
 		$config_manager = $adapter->get_config_manager(
-			$request_data['provider_id'],
-			strtolower($request_data['mac_address'])
-		);
+			$provider_id,
+			$mac_address);
 
 		$this->_log->logDebug("Now importing custom settings...");
 		$settings = $request_data['settings'];

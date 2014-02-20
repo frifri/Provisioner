@@ -34,7 +34,7 @@ class Accounts {
      *
      * @url GET /{account_id}
      * @access protected
-     * @class  AccessControlKazoo
+     * @class  AccessControlKazoo {@requires account}
      */
 
     function retrieve_document($account_id) {
@@ -57,7 +57,7 @@ class Accounts {
      *
      * @url GET /provider/{provider_id}
      * @access protected
-     * @class  AccessControlKazoo
+     * @class  AccessControlKazoo {@requires provider}
      */
 
     function get_by_provider($provider_id) {
@@ -86,7 +86,7 @@ class Accounts {
      * @url PUT /
      * @url PUT /{account_id}
      * @access protected
-     * @class  AccessControlKazoo
+     * @class  AccessControlKazoo {@requires account}
      */
 
     function add_document($request_data, $account_id = null) {
@@ -136,7 +136,7 @@ class Accounts {
      *
      * @url POST /{account_id}
      * @access protected
-     * @class  AccessControlKazoo
+     * @class  AccessControlKazoo {@requires account}
      */
 
     function editDocument($request_data, $account_id) {
@@ -155,7 +155,7 @@ class Accounts {
      *
      * @url DELETE /{account_id}
      * @access protected
-     * @class  AccessControlKazoo
+     * @class  AccessControlKazoo {@requires account}
      */
 
     function delete_document($account_id) {

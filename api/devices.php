@@ -34,7 +34,7 @@ class Devices {
 	 *
 	 * @url GET /{account_id}
 	 * @access protected
-	 * @class  AccessControlKazoo
+	 * @class  AccessControlKazoo {@requires account}
 	 */
 
 	function retrieve_list($account_id) {
@@ -67,7 +67,7 @@ class Devices {
 	 *
 	 * @url GET /{account_id}/{mac_address}
 	 * @access protected
-	 * @class  AccessControlKazoo
+	 * @class  AccessControlKazoo {@requires account}
 	 */
 
 	function get_device($account_id, $mac_address) {
@@ -90,10 +90,13 @@ class Devices {
 	 *
 	 * @url PUT /{account_id}/{mac_address}
 	 * @access protected
-	 * @class  AccessControlKazoo
+	 * @class  AccessControlKazoo {@requires account}
 	 */
 
 	function add_device($request_data, $account_id, $mac_address) {
+		// Hackish
+		$request_data = $request_data['data'];
+
 		$account_db = helper_utils::get_account_db($account_id);
 		if (!preg_match("/^[a-f0-9]{12}$/i", $mac_address))
 			throw new RestException(400, 'This is not a valid mac_address');
@@ -114,7 +117,7 @@ class Devices {
 			}
 
 			return array(
-				'status' => 'sucess',
+				'status' => 'success',
 				'message' => 'Device added successfully',
 				'id' => $new_doc->id);
 		} else
@@ -126,7 +129,7 @@ class Devices {
 	 *
 	 * @url POST /{account_id}/{mac_address}
 	 * @access protected
-	 * @class  AccessControlKazoo
+	 * @class  AccessControlKazoo {@requires account}
 	 */
 
 	function update_device($request_data, $account_id, $mac_address) {
@@ -139,7 +142,7 @@ class Devices {
 				throw new RestException(500, "Error while updating the doc");
 		}
 
-		return array('status' => 'sucess', 'message' => 'Device updated successfully');
+		return array('status' => 'success', 'message' => 'Device updated successfully');
 	}
 
 	/**
@@ -147,7 +150,7 @@ class Devices {
 	 *
 	 * @url DELETE /{account_id}/{mac_address}
 	 * @access protected
-	 * @class  AccessControlKazoo
+	 * @class  AccessControlKazoo {@requires account}
 	 */
 
 	function delete_device($account_id, $mac_address) {
@@ -159,7 +162,7 @@ class Devices {
 			if (!$this->_db->delete($account_db, $mac_address))
 				throw new RestException(500, "Could not delete the device doc in the account db");
 			else
-				return array('status' => 'sucess', 'message' => 'Device deleted successfully');
+				return array('status' => 'success', 'message' => 'Device deleted successfully');
 		} else
 			throw new RestException(500, "Could not delete the mac lookup entry");
 			

@@ -11,53 +11,93 @@
  */
 
 class AccessControlKazoo implements iAuthenticate {
-    private function REST($verb, $uri, $data) {
-        $url = "http://10.26.0.61:8000/v2" . $uri;
+	public static $requires = 'account';
+	public static $role = 'account';
 
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        $headers = array();
-        $headers[] = "Content-Type: application/json";
-        if ($this->auth_token) {
-            $headers[] = "X-Auth-Token: " . $this->auth_token;
-        }
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+	private function get($uri, $data) {
+		$url = "http://10.26.0.41:8000/v2" . $uri;
 
-        if ($verb == "PUT") {
-            $file = tmpfile();
-            fwrite($file, $data);
-            fseek($file, 0);
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_VERBOSE, 1);
+		$output = curl_exec($ch);
+		curl_close($ch);
 
-            curl_setopt($ch, CURLOPT_PUT, 1);
-            curl_setopt($ch, CURLOPT_INFILE, $file);
-            curl_setopt($ch, CURLOPT_INFILESIZE, strlen($data));
-        } else if ($verb == "POST") {
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        }
+		return $output;
+	}
 
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
-        $output = curl_exec($ch);
-        curl_close($ch);
+	function __isAllowed() {
+		$db = new wrapper_bigcouch();
+		$settings = helper_settings::get_instance();
+		$is_reseller = false;
 
-        if ($verb == "PUT")
-            fclose($file);
+		$auth_token = getallheaders()['X-Auth-Token'];
+		$reply = $this->get("/apps_link/authorize?auth_token=$auth_token", array());
+		$account_info = json_decode($reply);
 
-        return $output;
-    }
+		if ($account_info->status == 'error')
+			return false;
 
-    function __isAllowed() {
-        /*$account_id = $_GET['account_id'];
-        $auth_token = getallheaders()['X-Auth-Token'];
+		if (!$account_info->data->is_reseller) {
+			$account_db = helper_utils::get_account_db($account_info->data->account_id);
 
-        $reply = $this->REST("GET", "/accounts/$account_id?auth_token=$auth_token", array());
+			// If the creation occurs, then we need to create the doc too
+			if ($db->createDatabase($account_db)) {
+				$data = array(
+					"_id" => $account_info->data->account_id,
+					"name" => $account_info->data->account_name,
+					"provider_id" => $account_info->data->reseller_id,
+					"settings" => []
+				);
 
-        $account_info = json_decode($reply, TRUE);
+				$db->add($account_db, $data);
 
-        // TODO: Make sure a valid account is returned!
-        return isset($account_info['data']['name']);*/
-        return true;
-    }
+				// Let's now test if The provider for this account exist
+				if (!$db->isDocExist('providers', $account_info->data->reseller_id)) {
+					$data = array(
+						"_id" => $account_info->data->reseller_id,
+						"accounts" => array($account_info->data->account_id),
+						"authorize_ip" => $settings->database->master_provider->ip,
+						"domain" => $settings->database->master_provider->domain,
+						"name" => "Default Name",
+						"pvt_access_type" => "user",
+						"pvt_type" => "provider",
+						"settings" => array()
+					);
+
+					$db->add('providers', $data);
+
+				} else {
+					// We need to add the account to the account list
+					$doc = $db->get('providers', $account_info->data->reseller_id);
+					$doc['accounts'][] = $account_info->data->account_id;
+					$db->update('providers', $account_info->data->reseller_id, 'accounts', $doc['accounts']);
+				}
+			}
+
+		} else {
+			static::$role = 'provider';
+			// The current account is a reseller
+			// Let's check if the account exist
+			if (!$db->isDocExist('providers', $account_info->data->account_id)) {
+				// Then create it
+				$data = array(
+					"_id" => $account_info->data->account_id,
+					"accounts" => array(),
+					"authorize_ip" => $settings->database->master_provider->ip,
+					"domain" => $settings->database->master_provider->domain,
+					"name" => "Default Name",
+					"pvt_access_type" => "user",
+					"pvt_type" => "provider",
+					"settings" => array()
+				);
+
+				$db->add('providers', $data);
+			}
+		}
+
+		return static::$requires == static::$role || static::$role == 'provider';
+	}
 }

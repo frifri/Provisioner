@@ -13,9 +13,10 @@
 class AccessControlKazoo implements iAuthenticate {
 	public static $requires = 'account';
 	public static $role = 'account';
+	private $_settings;
 
 	private function get($uri, $data) {
-		$url = "http://10.26.0.41:8000/v2" . $uri;
+		$url = $this->_settings->hz2600->api_url . $uri;
 
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -30,7 +31,7 @@ class AccessControlKazoo implements iAuthenticate {
 
 	function __isAllowed() {
 		$db = new wrapper_bigcouch();
-		$settings = helper_settings::get_instance();
+		$this->_settings = helper_settings::get_instance();
 		$is_reseller = false;
 
 		$auth_token = getallheaders()['X-Auth-Token'];
@@ -59,8 +60,8 @@ class AccessControlKazoo implements iAuthenticate {
 					$data = array(
 						"_id" => $account_info->data->reseller_id,
 						"accounts" => array($account_info->data->account_id),
-						"authorize_ip" => $settings->database->master_provider->ip,
-						"domain" => $settings->database->master_provider->domain,
+						"authorize_ip" => $this->_settings->database->master_provider->ip,
+						"domain" => $this->_settings->database->master_provider->domain,
 						"name" => "Default Name",
 						"pvt_access_type" => "user",
 						"pvt_type" => "provider",
@@ -86,8 +87,8 @@ class AccessControlKazoo implements iAuthenticate {
 				$data = array(
 					"_id" => $account_info->data->account_id,
 					"accounts" => array(),
-					"authorize_ip" => $settings->database->master_provider->ip,
-					"domain" => $settings->database->master_provider->domain,
+					"authorize_ip" => $this->_settings->database->master_provider->ip,
+					"domain" => $this->_settings->database->master_provider->domain,
 					"name" => "Default Name",
 					"pvt_access_type" => "user",
 					"pvt_type" => "provider",

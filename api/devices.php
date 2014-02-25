@@ -82,7 +82,7 @@ class Devices {
 
 		// Just readding the mac_address for easy usage
 		$device_doc['mac_address'] = $mac_address;
-		return array('data' => $device_doc);            
+		return array('data' => $device_doc);
 	}
 
 	/**

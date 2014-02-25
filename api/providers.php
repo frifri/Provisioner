@@ -53,6 +53,8 @@ class Providers {
 	 * @url POST /{provider_id}
 	 */
 	function update($request_data, $provider_id) {
+		$request_data = $request_data['data'];
+
 		foreach ($request_data as $key => $value) {
 			if (!$this->_db->update('providers', $provider_id, $key, $value))
 				throw new RestException(500, 'Error while saving');
@@ -67,6 +69,7 @@ class Providers {
 	 * @url PUT /
 	 */
 	function create($request_data) {
+		$request_data = $request_data['data'];
 		$object_ready = $this->_db->prepare_add_providers($request_data);
 
 		// Let's just check if the domain do not exist already

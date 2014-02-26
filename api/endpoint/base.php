@@ -18,7 +18,7 @@ abstract class endpoint_base {
 
 	public function prepareConfig() {
 		$settings = $this->config_manager->get_settings();
-		$app_settings = helper_settings::get_instance();
+		$app_settings = helper_utils::get_settings();
 
 		if ($this->config_manager->get_request_type() == 'http') {
 			if (!empty($app_settings->custom_http_port))

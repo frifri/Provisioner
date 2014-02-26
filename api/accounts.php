@@ -62,7 +62,8 @@ class Accounts {
 
     function get_by_provider($provider_id) {
         $account_doc_arr = array();
-        $account_list = $this->_db->get('providers', $provider_id)['accounts'];
+        $providers_db = helper_utils::get_providers_db();
+        $account_list = $this->_db->get($providers_db, $provider_id)['accounts'];
 
         foreach ($account_list as $account_id) {
             $account_db = helper_utils::get_account_db($account_id);
@@ -95,8 +96,9 @@ class Accounts {
         if (!$provider_id)
             throw new RestException(400, 'Missing provider_id');
 
-        // We needt o get the provider doc first
-        $provider_doc = $this->_db->get('providers', $provider_id);
+        // We need to get the provider doc first
+        $providers_db = helper_utils::get_providers_db();
+        $provider_doc = $this->_db->get($providers_db, $provider_id);
         $account_list = $provider_doc['accounts'];
 
         // If there is no account we need to generate one
@@ -119,7 +121,7 @@ class Accounts {
             // Adding this account to the list.
             $account_list[] = $account_id;
             // And saving
-            if ($this->_db->update('providers', $provider_id, 'accounts', $account_list))
+            if ($this->_db->update($providers_db, $provider_id, 'accounts', $account_list))
                 return array(
                     'status' => true,
                     'message' => 'Document successfully added',
@@ -158,7 +160,7 @@ class Accounts {
      * @class  AccessControlKazoo {@requires account}
      */
 
-    function delete_document($account_id) {
+    function delete_document($account_id) {        
         $account_db = helper_utils::get_account_db($account_id);
 
         // Let's first try of the account that we are trying to delete exist
@@ -170,21 +172,23 @@ class Accounts {
                 // Check the id of the document to know if it is a device doc or the account doc
                 if (preg_match("/^[a-f0-9]{12}$/i", $doc['id'])) {
                     // And delete the mac_lookup entry
-                    if (!$this->_db->delete('mac_lookup', $doc['id'])) {
+                    $mac_lookup_db = helper_utils::get_mac_lookup_db();
+                    if (!$this->_db->delete($mac_lookup_db, $doc['id'])) {
                         throw new RestException(500, 'Could not delete a lookup entry');
                     }
                 }
             }
 
             // Now let's get the account doc for the provider_id
+            $providers_db = helper_utils::get_providers_db();
             $provider_id = $this->_db->get($account_db, $account_id)['provider_id'];
-            $account_list = $this->_db->get('providers', $provider_id)['accounts'];
+            $account_list = $this->_db->get($providers_db, $provider_id)['accounts'];
 
             // Getting the position and deleting the element
             $position = array_search($account_id, $account_list);
             unset($account_list[$position]);
             // and then updating the array
-            $this->_db->update('providers', $provider_id, 'accounts', $account_list);
+            $this->_db->update($providers_db, $provider_id, 'accounts', $account_list);
 
             // And finally let's delete the account database
             if ($this->_db->delete($account_db)) {

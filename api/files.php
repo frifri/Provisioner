@@ -19,7 +19,7 @@ class Files {
 
 	function __construct() {
 		// First load the settings
-		$this->_settings = helper_settings::get_instance();
+		$this->_settings = helper_utils::get_settings();
 
 		// Logger
 		$this->_log = KLogger::instance(LOGS_BASE, Klogger::DEBUG);
@@ -60,7 +60,8 @@ class Files {
 
 		// So here we are going to retrieve the provider_id
 		// First, let's get the account.. The provider_id should be there
-		$account_id = $this->_db->get('mac_lookup', $mac_address)['account_id'];
+                $mac_lookup_db = helper_utils::get_mac_lookup_db();
+		$account_id = $this->_db->get($mac_lookup_db, $mac_address)['account_id'];
 		$account_db = helper_utils::get_account_db($account_id);
 		$provider_id = $this->_db->get($account_db, $account_id)['provider_id'];
 

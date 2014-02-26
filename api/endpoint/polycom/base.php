@@ -16,7 +16,7 @@ abstract class endpoint_polycom_base extends endpoint_base {
 	function prepareConfig() {
 		parent::prepareConfig();
 
-		$app_settings = helper_settings::get_instance();
+		$app_settings = helper_utils::get_settings();
 
 		$this->_set_timezone();
 

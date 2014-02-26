@@ -16,7 +16,6 @@ require_once LIB_BASE . 'restler/restler.php';
 require_once LIB_BASE . 'KLogger.php';
 
 use Luracast\Restler\Restler;
-
 // CORS
 header('Access-Control-Allow-Headers:Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control, X-Auth-Token');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');

@@ -2,7 +2,6 @@
 	"version": "5.5.1",
 	"static_data_source": "database",
 	"adapter": "2600hz",
-	"db_prefix": "",
 	"custom_http_port": "8888",
 
 	"paths": {
@@ -17,6 +16,12 @@
 		"port": 15984,
 		"username": "",
 		"password": "",
+
+	    "account_db_suffix": "provisioner",
+        "providers_db" : "provisioner_providers",
+        "mac_lookup_db" : "provisioner_macs",
+        "factory_defaults_db": "provisioner_defaults",
+        "system_account_db": "provisioner_accounts",
 
 		"master_provider": {
 			"name": "Master provider",

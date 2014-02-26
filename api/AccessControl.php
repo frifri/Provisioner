@@ -20,9 +20,9 @@ class AccessControl implements iAuthenticate {
     function __isAllowed() {
         $db = new wrapper_bigcouch();
         $host_ip = $_SERVER['REMOTE_ADDR'];
-        $database = 'providers';
+        $providers_db = helper_utils::get_providers_db();
 
-        $response = $db->getOneByKey($database, 'ip', $_SERVER['REMOTE_ADDR']);
+        $response = $db->getOneByKey($providers_db, 'ip', $_SERVER['REMOTE_ADDR']);
         $access_type = isset($response['rows'][0]['value']['access_type']) ? $response['rows'][0]['value']['access_type'] : false;
 
         if (!$access_type) {
@@ -33,5 +33,3 @@ class AccessControl implements iAuthenticate {
         return static::$requires == static::$role || static::$role == 'admin';
     }
 }
-
-?>

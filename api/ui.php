@@ -19,7 +19,7 @@ class Ui {
         $loader = new Twig_Loader_String();
         $this->_twig = new Twig_Environment($loader);
     }
-
+    
     function __construct() {
         $this->_db = new wrapper_bigcouch();
         $this->_twig_init();
@@ -41,21 +41,22 @@ class Ui {
      */
     function get_default_template($request_data, $brand, $model) {
         $folder = helper_utils::get_folder($brand, $model);
+        $factory_defaults_db = helper_settings::get_factory_defaults_db();
 
         // Global template
-        $global_tmpl = $this->_db->get('factory_defaults', 'global')['template'];
+        $global_tmpl = $this->_db->get($factory_defaults_db, 'global')['template'];
 
         // Brand doc
         $doc_name = helper_utils::get_device_doc_name($brand);
-        $brand_tmpl = $this->_db->get('factory_defaults', $doc_name)['template'];
+        $brand_tmpl = $this->_db->get($factory_defaults_db, $doc_name)['template'];
 
         // Family doc
         $doc_name = helper_utils::get_device_doc_name($brand, $folder);
-        $family_tmpl = $this->_db->get('factory_defaults', $doc_name)['template'];
+        $family_tmpl = $this->_db->get($factory_defaults_db, $doc_name)['template'];
 
         // Model doc
         $doc_name = helper_utils::get_device_doc_name($brand, $folder, $model);
-        $model_tmpl = $this->_db->get('factory_defaults', $doc_name)['template'];
+        $model_tmpl = $this->_db->get($factory_defaults_db, $doc_name)['template'];
 
         // This kind of merge will override any values coming before
         $merged_object = array_replace_recursive($global_tmpl, $brand_tmpl, $family_tmpl, $model_tmpl);
@@ -73,6 +74,7 @@ class Ui {
     function get_specific_template($request_data, $account_id, $mac_address) {
         $account_db = helper_utils::get_account_db($account_id);
         $device_doc = $this->_db->get($account_db, $mac_address);
+        $factory_defaults_db = helper_settings::get_factory_defaults_db();
 
         $param = array();
         $param['lines'][0]['label'] = 'test';
@@ -82,19 +84,19 @@ class Ui {
         $model = $device_doc['model'];
 
         // Global template
-        $global_tmpl = $this->_db->get('factory_defaults', 'global')['template'];
+        $global_tmpl = $this->_db->get($factory_defaults_db, 'global')['template'];
 
         // Brand doc
         $doc_name = helper_utils::get_device_doc_name($brand);
-        $brand_tmpl = $this->_db->get('factory_defaults', $doc_name)['template'];
+        $brand_tmpl = $this->_db->get($factory_defaults_db, $doc_name)['template'];
 
         // Family doc
         $doc_name = helper_utils::get_device_doc_name($brand, $family);
-        $family_tmpl = $this->_db->get('factory_defaults', $doc_name)['template'];
+        $family_tmpl = $this->_db->get($factory_defaults_db, $doc_name)['template'];
 
         // Model doc
         $doc_name = helper_utils::get_device_doc_name($brand, $family, $model);
-        $model_tmpl = $this->_db->get('factory_defaults', $doc_name)['template'];
+        $model_tmpl = $this->_db->get($factory_defaults_db, $doc_name)['template'];
 
         // This kind of merge will override any values coming before
         $merged_object = array_replace_recursive($global_tmpl, $brand_tmpl, $family_tmpl, $model_tmpl);

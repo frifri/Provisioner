@@ -20,7 +20,7 @@ class Phones {
     }
 
     private function _getAllPhonesInfo() {
-        $factory_defaults_db = helper_settings::get_factory_defaults_db();
+        $factory_defaults_db = helper_utils::get_factory_defaults_db();
         $brands = $this->_db->getAllByKey($factory_defaults_db, 'brand', null);
         
         foreach ($brands as $brand_key => $brand_content) {
@@ -61,7 +61,7 @@ class Phones {
      */
 
     function getElement($brand = null, $family = null, $model = null) {
-        $factory_defaults_db = helper_settings::get_factory_defaults_db();
+        $factory_defaults_db = helper_utils::get_factory_defaults_db();
         if (!$brand)
             $result['data'] = $this->_getAllPhonesInfo();
             //$result = $this->_db->getAllByKey($factory_defaults_db, 'brand', null);
@@ -99,7 +99,7 @@ class Phones {
         Validator::validateEdit($request_data, $this->_FIELDS);
 
         foreach ($request_data as $key => $value) {
-            $factory_defaults_db = helper_settings::get_factory_defaults_db();
+            $factory_defaults_db = helper_utils::get_factory_defaults_db();
             if ($this->_db->update($factory_defaults_db, $document_name, $key, $value))
                 return array('status' => true, 'message' => 'Document successfully modified');
             else
@@ -127,7 +127,7 @@ class Phones {
         
         $object_ready = $this->_db->prepareAddPhones($request_data, $document_name, $brand, $family, $model);
 
-        $factory_defaults_db = helper_settings::get_factory_defaults_db();
+        $factory_defaults_db = helper_utils::get_factory_defaults_db();
 
         if (!$this->_db->add($factory_defaults_db, $object_ready))
             throw new RestException(500, 'Error while Adding the data');
@@ -149,7 +149,7 @@ class Phones {
         // NOP, this is NOT OK for the wrapper. it is too specific.
         // I MUST find a way to use the delete() function instead of this one.
         // If I don't the other wrappers will need to implement this function as well.
-        $factory_defaults_db = helper_settings::get_factory_defaults_db();
+        $factory_defaults_db = helper_utils::get_factory_defaults_db();
         $this->_db->deleteView($factory_defaults_db, $brand, $family, $model);
 
         return array('status' => true, 'message' => 'Document successfully deleted');

@@ -25,7 +25,7 @@ class adapter_2600hz_adapter {
     public function get_config_manager($provider_id, $mac_address) {
         $providers_db = helper_utils::get_providers_db();
         $system_account_db = helper_utils::get_system_account_db();
-        $factory_defaults_db = helper_settings::get_factory_defaults_db();
+        $factory_defaults_db = helper_utils::get_factory_defaults_db();
         $needs_manual_provisioning = false;
 
         // Logger

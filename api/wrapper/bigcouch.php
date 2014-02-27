@@ -232,7 +232,7 @@ class wrapper_bigcouch {
     // it is necessary because of the way that we are handling the parenting stuffs.
     public function deleteView($database, $brand, $family = null, $model = null) {
         $this->_set_client($database);
-        
+
         // In the following code, we need to add a 'z' at the end of last element
         // of the endkey since it is a range
         if (!$family) {
@@ -357,7 +357,7 @@ class wrapper_bigcouch {
 
         return $request_data;
     }
-    
+
     // Add - providers
     public function prepare_add_providers($request_data) {
         $finalObj = array();
@@ -396,7 +396,7 @@ class wrapper_bigcouch {
 
     public function prepare_add_device($request_data, $mac_address) {
         $finalObj = array();
-        
+
         $finalObj['_id'] = $mac_address;
         $finalObj['brand'] = $request_data['brand'];
         $finalObj['family'] = $request_data['family'];

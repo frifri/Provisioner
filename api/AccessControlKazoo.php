@@ -53,6 +53,8 @@ class AccessControlKazoo implements iAuthenticate {
         if ($account_info->status == 'error')
             return false;
 
+        //print_r($account_info);
+
         if (!$account_info->data->is_reseller) {
             $account_db = helper_utils::get_account_db($account_info->data->account_id);
 

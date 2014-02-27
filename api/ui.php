@@ -41,7 +41,7 @@ class Ui {
      */
     function get_default_template($request_data, $brand, $model) {
         $folder = helper_utils::get_folder($brand, $model);
-        $factory_defaults_db = helper_settings::get_factory_defaults_db();
+        $factory_defaults_db = helper_utils::get_factory_defaults_db();
 
         // Global template
         $global_tmpl = $this->_db->get($factory_defaults_db, 'global')['template'];
@@ -74,7 +74,7 @@ class Ui {
     function get_specific_template($request_data, $account_id, $mac_address) {
         $account_db = helper_utils::get_account_db($account_id);
         $device_doc = $this->_db->get($account_db, $mac_address);
-        $factory_defaults_db = helper_settings::get_factory_defaults_db();
+        $factory_defaults_db = helper_utils::get_factory_defaults_db();
 
         $param = array();
         $param['lines'][0]['label'] = 'test';

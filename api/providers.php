@@ -56,7 +56,7 @@ class Providers {
      */
     function update($request_data, $provider_id) {
         $providers_db = helper_utils::providers_db();
-	$request_data = $request_data['data'];
+        $request_data = $request_data['data'];
 
         foreach ($request_data as $key => $value) {
             if (!$this->_db->update($providers_db, $provider_id, $key, $value))
@@ -72,7 +72,7 @@ class Providers {
      * @url PUT /
      */
     function create($request_data) {
-		$request_data = $request_data['data'];
+        $request_data = $request_data['data'];
         $object_ready = $this->_db->prepare_add_providers($request_data);
             
         // Let's just check if the domain do not exist already
@@ -90,7 +90,7 @@ class Providers {
                 'message' => 'Provider successfully added',
                 'id' => $new_doc->id);
     }
-        
+
     /**
      *  This function only delete the provider
      *  TODO: allow the provider to also delete the users linked to this provider.

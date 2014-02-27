@@ -13,22 +13,52 @@
 require_once LIB_BASE . 'KLogger.php';
 
 class helper_utils {
+    /**
+    * Returns the JSON from the config.json file
+    *
+    * @author   kanderson
+    * @return   object configuration JSON object
+    */
     public static function get_settings() {
         return helper_settings::get_instance()->get_settings();
     }
 
+    /**
+    * Returns the name of the MAC lookup db
+    *
+    * @author   kanderson
+    * @return   string The name of the MAC lookup db
+    */
     public static function get_mac_lookup_db() {
         return self::get_settings()->database->mac_lookup_db;
     }
-    
+
+    /**
+    * Returns the name of the providers db
+    *
+    * @author   kanderson
+    * @return   string The name of the providers db
+    */    
     public static function get_providers_db() {
         return self::get_settings()->database->providers_db;
     }
 
+    /**
+    * Returns the name of the factory defaults db
+    *
+    * @author   kanderson
+    * @return   string The name of the factory defaults db
+    */
     public static function get_factory_defaults_db() {
         return self::get_settings()->database->factory_defaults_db;
     }
 
+    /**
+    * Returns the name of the system account db
+    *
+    * @author   kanderson
+    * @return   string The name of the system account db
+    */
     public static function get_system_account_db() {
         return self::get_settings()->database->system_account_db;
     }

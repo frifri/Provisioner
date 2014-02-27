@@ -4,6 +4,10 @@
 	"adapter": "2600hz",
 	"custom_http_port": "8888",
 
+	"hz2600": {
+		"api_url": "http://10.26.0.82:8000/v2"
+	},
+
 	"paths": {
 		"root": "/",
 		"endpoint": "/endpoint/",

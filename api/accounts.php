@@ -91,6 +91,7 @@ class Accounts {
      */
 
     function add_document($request_data, $account_id = null) {
+		$request_data = $request_data['data'];
         $provider_id = helper_utils::get_param($request_data, 'provider_id', false);
 
         if (!$provider_id)
@@ -142,6 +143,7 @@ class Accounts {
      */
 
     function editDocument($request_data, $account_id) {
+		$request_data = $request_data['data'];
         $account_db = helper_utils::get_account_db($account_id);
 
         foreach ($request_data as $key => $value) {

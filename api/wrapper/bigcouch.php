@@ -55,7 +55,7 @@ class wrapper_bigcouch {
             // TODO: allow the user to choose what must be the key
             $return_value[$row['value']['name']] = $row['value'];
         }
-        
+
         return $return_value;
     }
 
@@ -67,13 +67,13 @@ class wrapper_bigcouch {
     // Will retrieve a single document
     private function _getDoc($database, $document, $format = true) {
         $this->_set_client($database);
-        
+
         try {
             $doc = $this->_couch_client->asArray()->getDoc($document);
         } catch (Exception $e) {
             return false;
         }
-        
+
         // Do we want to filter or not?
         if ($format)
             return $this->_formatNormalResponse($doc);
@@ -91,34 +91,34 @@ class wrapper_bigcouch {
     // /!\ not adapted to views
     public function getAll($database, $include_doc = false) {
         $this->_set_client($database);
-        
+
         try {
             $response = $this->_couch_client
                 ->asArray()
                 ->include_docs($include_doc)
                 ->getAllDocs();
-            
+
             return $this->_formatNormalResponse($response);
         } catch (Exception $e) {
             return false;
         }
     }
-    
+
     public function createDatabase($db_name) {
         $this->_set_client($db_name);
         if (!$this->_couch_client->databaseExists()) {
             $this->_couch_client->createDatabase();
             return true;
         }
-        
+
         return false;
     }
-    
+
     // Retrieve all the document of a certain type and for a specific key
     // /!\ adapted to views and only
     public function getAllByKey($database, $document_type, $filter_key = null, $format = true) {
         $this->_set_client($database);
-        
+
         try {
             if ($filter_key)
                 $response = $this->_couch_client
@@ -130,17 +130,17 @@ class wrapper_bigcouch {
                 $response = $this->_couch_client
                     ->asArray()
                     ->getView($database, "list_by_$document_type");
-            
+
             if ($format)
                 return $this->_formatViewResponse($response);
             else
                 return $response;
-            
+
         } catch (Exception $e) {
             return false;
         }
     }
-    
+
     public function getOneByKey($database, $document_type, $filter_key) {
         $this->_set_client($database);
         
@@ -153,7 +153,7 @@ class wrapper_bigcouch {
             return false;
         }
     }
-    
+
     public function isDBexist($db) {
         // I think it is better to create a new client instead of changing the current one
         $client = new couchClient($this->_server_url, $db);
@@ -162,14 +162,14 @@ class wrapper_bigcouch {
         else 
             return false;
     }
-    
+
     public function isDocExist($db, $document) {
         if ($this->_getDoc($db, $document, false))
             return true;
         else
             return false;
     }
-    
+
     /*
       This will get a specific document
       The format argument is used when retrieving a raw doc or a filtered doc.
@@ -178,7 +178,7 @@ class wrapper_bigcouch {
     public function get($database, $document, $format = true) {
         return $this->_getDoc($database, $document, $format);
     }
-    
+
     // Do I need to add a parameter specific for the name here?
     public function add($database, $document) {
         $this->_set_client($database);
@@ -190,14 +190,14 @@ class wrapper_bigcouch {
             return $created_doc;
         } catch (Exception $e) {
             return false;
-        } 
+        }
     }
-    
+
     // TODO: fix the needed parameters. 
     // It is a shame that the user need to enter the DB and the doc each time
     public function update($database, $document, $key, $value) {
         $doc = $this->_getDoc($database, $document, false);
-        
+
         if ($doc) {
             try {
                 $doc[$key] = $value;
@@ -208,7 +208,7 @@ class wrapper_bigcouch {
             }
         }
     }
-    
+
     // This will delete permanently the document
     public function delete($database, $document = null) {
         // We are deleting a document;
@@ -227,7 +227,7 @@ class wrapper_bigcouch {
             $this->_couch_client->deleteDatabase();
         }
     }
-    
+
     // This function will be used for now only for the phones APIs
     // it is necessary because of the way that we are handling the parenting stuffs.
     public function deleteView($database, $brand, $family = null, $model = null) {
@@ -246,13 +246,13 @@ class wrapper_bigcouch {
             $startkey = array($brand, $family, $model);
             $endkey = array($brand, $family, $model.'z');
         }
-        
+
         $response = $this->_couch_client
             ->startkey($startkey)
             ->endkey($endkey)
             ->asArray()
             ->getView($database, "list_by_all");
-        
+
         foreach ($response['rows'] as  $row) {
             if ($this->delete($database, $row['id']))
                 throw new RestException(500, "Error while deleting element");
@@ -267,7 +267,7 @@ class wrapper_bigcouch {
         $this->_log->logInfo("Retrieving the document $document...");
         $couch_client = new couchClient($this->_server_url, $database);
         $this->_log->logInfo('Couch client loaded!');
-        
+
         try {
             $doc = $couch_client->asArray()->getDoc($document);
         } catch (Exception $e) {
@@ -276,7 +276,7 @@ class wrapper_bigcouch {
             $this->_log->logWarn("Error: $error_message");
             return false;
         }
-        
+
         // If the user just want the settings
         if ($just_settings) {
             $this->_log->logInfo('Retrieved the doc! will return only the settings');
@@ -287,13 +287,13 @@ class wrapper_bigcouch {
                 $this->_log->logInfo('Settings found... returning them');
                 return $settings;
             }
-            
+
         } else {
             $this->_log->logInfo('Retrieved the doc! will return the whole de doc');
             $this->_log->logInfo('Settings found... returning them');
             return $doc;
         }
-        
+
         $this->_log->logWarn('Oops... something went obviously wrong when getting the doc');
         return false;
     }
@@ -314,11 +314,11 @@ class wrapper_bigcouch {
             return false;
         }
     }
-    
+
     public function get_account_id($mac_address) {
         $mac_lookup_db = helper_utils::get_mac_lookup_db();
         $couch_client = new couchClient($this->_server_url, $mac_lookup_db);
-        
+
         try {
             $doc = $couch_client->asArray()->getDoc($mac_address);
         } catch (Exception $e) {
@@ -335,11 +335,11 @@ class wrapper_bigcouch {
       Prepare functions
       Those functions are necessary to format the data which are going to be send
     */
-    
+
     // Add - phones
     public function prepareAddPhones($request_data, $document_name, $brand, $family = null, $model = null) {
         $request_data['_id'] = $document_name;
-        
+
         if (!$family) {
             $type = 'brand';
             $request_data['brand'] = $brand;
@@ -354,7 +354,7 @@ class wrapper_bigcouch {
             $request_data['model'] = $model;
         }
         $request_data['pvt_type'] = $type;
-        
+
         return $request_data;
     }
     
@@ -362,38 +362,38 @@ class wrapper_bigcouch {
     public function prepare_add_providers($request_data) {
         $finalObj = array();
         $finalObj['pvt_type'] = 'provider';
-        
+
         $finalObj['authorized_ip'] = helper_utils::get_param($request_data, 'authorized_ip', array("::1", "127.0.0.1"));
         $finalObj['default_account_id'] = helper_utils::get_param($request_data, 'default_account_id', null);
         $finalObj['name'] = helper_utils::get_param($request_data, 'name', "Default provider name");
         $finalObj['pvt_access_type'] = helper_utils::get_param($request_data, 'pvt_access_type', "user");
         $finalObj['domain'] = helper_utils::get_param($request_data, 'domain', "default.domain.com");
         $finalObj['settings'] = helper_utils::get_param($request_data, 'settings', '{}');
-        
+
         // No accounts are related to that provider yet so we need to initialize it.
         $finalObj['accounts'] = array();
-        
+
         return $finalObj;
     }
-    
+
     // Add - accounts
     public function prepare_add_accounts($request_data, $account_id) {
         $finalObj = array();
         $account_db = helper_utils::get_account_db($account_id);
-        
+
         $this->_set_client($account_db);
         if (!$this->_couch_client->databaseExists())
             $this->_couch_client->createDatabase();
-        
+
         $finalObj['_id'] = $account_id;
         $finalObj['name'] = helper_utils::get_param($request_data, 'name', 'Default account name');
         $finalObj['settings'] = helper_utils::get_param($request_data, 'settings', '{}');
         // Here we can straight use that since we know we have one
         $finalObj['provider_id'] = $request_data['provider_id'];
-        
+
         return $finalObj;
     }
-    
+
     public function prepare_add_device($request_data, $mac_address) {
         $finalObj = array();
         
@@ -403,9 +403,7 @@ class wrapper_bigcouch {
         $finalObj['model'] = $request_data['model'];
         $finalObj['name'] = helper_utils::get_param($request_data, 'name', "Default device name");
         $finalObj['settings'] = helper_utils::get_param($request_data, 'settings', '{}');
-        
-        // Local_sip_port are generated here
-        
+
         return $finalObj;
     }
 }

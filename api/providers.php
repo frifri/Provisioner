@@ -28,7 +28,7 @@ class Providers {
         $providers_db = helper_utils::providers_db();
         
         $result['data'] = $this->_db->getAllByKey($providers_db, 'domain');
-            
+
         return $result;
     }
 
@@ -40,9 +40,9 @@ class Providers {
     function getOne($request_data, $provider_id) {
         $provider = array();
         $providers_db = helper_utils::providers_db();
-            
+
         $provider['data'] = $this->_db->get($providers_db, $provider_id);
-            
+
         if ($provider)
             return $provider;
         else
@@ -62,7 +62,7 @@ class Providers {
             if (!$this->_db->update($providers_db, $provider_id, $key, $value))
                 throw new RestException(500, 'Error while saving');
         }
-            
+
         return array('status' => true, 'message' => 'Provider successfully modified');
     }
 
@@ -74,13 +74,13 @@ class Providers {
     function create($request_data) {
         $request_data = $request_data['data'];
         $object_ready = $this->_db->prepare_add_providers($request_data);
-            
+
         // Let's just check if the domain do not exist already
         $providers_db = helper_utils::providers_db();
         $domain_exist = $this->_db->getOneByKey($providers_db, 'domain', $object_ready['domain']);
         if ($domain_exist)
             throw new RestException(409, "domain. You can't create a provider with this domain");
-            
+
         $new_doc = $this->_db->add($providers_db, $object_ready);
         if (!$new_doc)
             throw new RestException(500, 'Error while Adding');
@@ -99,7 +99,7 @@ class Providers {
      */
     function delete($provider_id) {
         $providers_db = helper_utils::providers_db();
-        
+
         if (!$this->_db->delete($providers_db, $provider_id))
             throw new RestException(500, 'Error while deleting');
         else

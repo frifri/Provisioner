@@ -1,36 +1,36 @@
 {
-	"version": "5.5.1",
-	"static_data_source": "database",
-	"adapter": "2600hz",
-	"custom_http_port": "8888",
+    "version": "5.5.2",
+    "static_data_source": "database",
+    "adapter": "2600hz",
+    "custom_http_port": "",
 
-	"hz2600": {
-		"api_url": "http://10.26.0.82:8000/v2"
-	},
+    "hz2600": {
+        "api_url": "http://10.26.0.41:8000/v2"
+    },
 
-	"paths": {
-		"root": "/",
-		"endpoint": "/endpoint/",
-		"firmwares": "http://my.domain.com/firmware/"
-	},
-	
-	"database": {
-		"type": "bigcouch",
-		"url": "http://172.16.96.129",
-		"port": 15984,
-		"username": "",
-		"password": "",
+    "paths": {
+        "root": "/",
+        "endpoint": "/endpoint/",
+        "firmwares": "http://my.domain.com/firmware/"
+    },
 
-	    "account_db_suffix": "provisioner",
-        "providers_db" : "provisioner_providers",
-        "mac_lookup_db" : "provisioner_macs",
-        "factory_defaults_db": "provisioner_defaults",
-        "system_account_db": "provisioner_accounts",
+    "database": {
+        "type": "bigcouch",
+        "url": "http://172.16.96.129",
+        "port": 15984,
+        "username": "",
+        "password": "",
 
-		"master_provider": {
-			"name": "Master provider",
-			"ip": ["MyIP", "AnotherIP"],
-			"domain": "MyDomain"
-		}
-	}
+        "account_db_suffix": "",
+        "providers_db" : "providers",
+        "mac_lookup_db" : "mac_lookup",
+        "factory_defaults_db": "factory_defaults",
+        "system_account_db": "system_account",
+
+        "master_provider": {
+            "name": "Master provider",
+            "ip": ["MyIP", "AnotherIP"],
+            "domain": "MyDomain"
+        }
+    }
 }

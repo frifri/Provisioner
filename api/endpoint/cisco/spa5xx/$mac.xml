@@ -1,89 +1,89 @@
 <flat-profile>
-	<!-- VLAN Settings -->
-	<Enable_VLAN ua="rw">{{ system.vlan.enable }}</Enable_VLAN>
-	<Network_Startup_Delay ua="na">{{ system.vlan.net_startup_delay }}</Network_Startup_Delay>
-	<VLAN_ID ua="rw">{{ system.vlan.id }}</VLAN_ID>
-	<PC_Port_VLAN_Highest_Priority ua="na">{{ system.vlan.pc_high_priority }}</PC_Port_VLAN_Highest_Priority> <!-- options: 0/1/2/3/4/5/6/7/No Limit -->
-	<Enable_PC_Port_VLAN_Tagging ua="na">{{ system.vlan.pc_tagging }}</Enable_PC_Port_VLAN_Tagging>
-	<PC_Port_VLAN_ID ua="na">{{ system.vlan.pc_id }}</PC_Port_VLAN_ID>
+    <!-- VLAN Settings -->
+    <Enable_VLAN ua="rw">{{ system.vlan.enable }}</Enable_VLAN>
+    <Network_Startup_Delay ua="na">{{ system.vlan.net_startup_delay }}</Network_Startup_Delay>
+    <VLAN_ID ua="rw">{{ system.vlan.id }}</VLAN_ID>
+    <PC_Port_VLAN_Highest_Priority ua="na">{{ system.vlan.pc_high_priority }}</PC_Port_VLAN_Highest_Priority> <!-- options: 0/1/2/3/4/5/6/7/No Limit -->
+    <Enable_PC_Port_VLAN_Tagging ua="na">{{ system.vlan.pc_tagging }}</Enable_PC_Port_VLAN_Tagging>
+    <PC_Port_VLAN_ID ua="na">{{ system.vlan.pc_id }}</PC_Port_VLAN_ID>
 
 {% for line in lines %}
 {% if line %}
-	<Extension_{{ loop.index }}_ ua="na">_{{ loop.index }}_</Extension_{{ loop.index }}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
-	<Short_Name_{{ loop.index }}_ ua="na">{{ line.basic.display_name }}</Short_Name_{{ loop.index }}_>
+    <Extension_{{ loop.index }}_ ua="na">_{{ loop.index }}_</Extension_{{ loop.index }}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+    <Short_Name_{{ loop.index }}_ ua="na">{{ line.basic.display_name }}</Short_Name_{{ loop.index }}_>
 
-	<!-- Subscriber Information -->
-	<Display_Name_{{ loop.index }}_ ua="na">{{ line.basic.display_name }}</Display_Name_{{ loop.index }}_>
-	<User_ID_{{ loop.index }}_ ua="na">{{ line.sip.username }}</User_ID_{{ loop.index }}_>
-	<Password_{{ loop.index }}_ ua="na">{{ line.sip.password }}</Password_{{ loop.index }}_>
-	<Use_Auth_ID_{{ loop.index }}_ ua="na">{{ line.sip.use_auth_id }}</Use_Auth_ID_{{ loop.index }}_>
-	<Auth_ID_{{ loop.index }}_ ua="na">{{ line.sip.register_name }}</Auth_ID_{{ loop.index }}_>
-	<Mailbox_ID_{{ loop.index }}_ ua="na">{{ line.basic.voicemail }}</Mailbox_ID_{{ loop.index }}_>
+    <!-- Subscriber Information -->
+    <Display_Name_{{ loop.index }}_ ua="na">{{ line.basic.display_name }}</Display_Name_{{ loop.index }}_>
+    <User_ID_{{ loop.index }}_ ua="na">{{ line.sip.username }}</User_ID_{{ loop.index }}_>
+    <Password_{{ loop.index }}_ ua="na">{{ line.sip.password }}</Password_{{ loop.index }}_>
+    <Use_Auth_ID_{{ loop.index }}_ ua="na">{{ line.sip.use_auth_id }}</Use_Auth_ID_{{ loop.index }}_>
+    <Auth_ID_{{ loop.index }}_ ua="na">{{ line.sip.register_name }}</Auth_ID_{{ loop.index }}_>
+    <Mailbox_ID_{{ loop.index }}_ ua="na">{{ line.basic.voicemail }}</Mailbox_ID_{{ loop.index }}_>
 
-	<!-- SIP Settings -->
-	<Line_Enable_{{ loop.index }}_ ua="na">{{ line.basic.enable }}</Line_Enable_{{ loop.index }}_>
-	<SIP_Transport_{{ loop.index }}_ ua="na">{{ line.basic.transport }}</SIP_Transport_{{ loop.index }}_> <!-- options: UDP/TCP/TLS -->
-	<SIP_Port_{{ loop.index }}_ ua="na">{{ line.sip.local_port }}</SIP_Port_{{ loop.index }}_>
+    <!-- SIP Settings -->
+    <Line_Enable_{{ loop.index }}_ ua="na">{{ line.basic.enable }}</Line_Enable_{{ loop.index }}_>
+    <SIP_Transport_{{ loop.index }}_ ua="na">{{ line.basic.transport }}</SIP_Transport_{{ loop.index }}_> <!-- options: UDP/TCP/TLS -->
+    <SIP_Port_{{ loop.index }}_ ua="na">{{ line.sip.local_port }}</SIP_Port_{{ loop.index }}_>
 
-	<!-- Proxy and Registration -->
-	<Proxy_{{ loop.index }}_ ua="na">{{ line.sip.sip_server_1 }}</Proxy_{{ loop.index }}_>
-	<Outbound_Proxy_{{ loop.index }}_ ua="na">{{ line.sip.outbound_proxy_server_1 }}</Outbound_Proxy_{{ loop.index }}_>
-	<Alternate_Outbound_Proxy_{{ loop.index }}_ ua="na">{{ line.sip.outbound_proxy_server_2 }}</Alternate_Outbound_Proxy_{{ loop.index }}_>
-	<Use_Outbound_Proxy_{{ loop.index }}_ ua="na">Yes</Use_Outbound_Proxy_{{ loop.index }}_>
-	<Register_{{ loop.index }}_ ua="na">Yes</Register_{{ loop.index }}_>
-	<Register_Expires_{{ loop.index }}_ ua="na">{{ line.advanced.expire }}</Register_Expires_{{ loop.index }}_>
-	<Use_DNS_SRV_{{ loop.index }}_ ua="na">{{ line.advanced.use_dnssrv }}</Use_DNS_SRV_{{ loop.index }}_>
-	<DNS_SRV_Auto_Prefix_{{ loop.index }}_ ua="na">{{ line.advanced.dnssrv_auto_prefix }}</DNS_SRV_Auto_Prefix_{{ loop.index }}_>
-	<Proxy_Fallback_Intvl_{{ loop.index }}_ ua="na">360</Proxy_Fallback_Intvl_{{ loop.index }}_>
-	<Proxy_Redundancy_Method_{{ loop.index }}_ ua="na">Normal</Proxy_Redundancy_Method_{{ loop.index }}_> <!-- options: Normal/Based on SRV Port -->
+    <!-- Proxy and Registration -->
+    <Proxy_{{ loop.index }}_ ua="na">{{ line.sip.sip_server_1 }}</Proxy_{{ loop.index }}_>
+    <Outbound_Proxy_{{ loop.index }}_ ua="na">{{ line.sip.outbound_proxy_server_1 }}</Outbound_Proxy_{{ loop.index }}_>
+    <Alternate_Outbound_Proxy_{{ loop.index }}_ ua="na">{{ line.sip.outbound_proxy_server_2 }}</Alternate_Outbound_Proxy_{{ loop.index }}_>
+    <Use_Outbound_Proxy_{{ loop.index }}_ ua="na">Yes</Use_Outbound_Proxy_{{ loop.index }}_>
+    <Register_{{ loop.index }}_ ua="na">Yes</Register_{{ loop.index }}_>
+    <Register_Expires_{{ loop.index }}_ ua="na">{{ line.advanced.expire }}</Register_Expires_{{ loop.index }}_>
+    <Use_DNS_SRV_{{ loop.index }}_ ua="na">{{ line.advanced.use_dnssrv }}</Use_DNS_SRV_{{ loop.index }}_>
+    <DNS_SRV_Auto_Prefix_{{ loop.index }}_ ua="na">{{ line.advanced.dnssrv_auto_prefix }}</DNS_SRV_Auto_Prefix_{{ loop.index }}_>
+    <Proxy_Fallback_Intvl_{{ loop.index }}_ ua="na">360</Proxy_Fallback_Intvl_{{ loop.index }}_>
+    <Proxy_Redundancy_Method_{{ loop.index }}_ ua="na">Normal</Proxy_Redundancy_Method_{{ loop.index }}_> <!-- options: Normal/Based on SRV Port -->
 
-	<!-- Audio Configuration -->
-	<Preferred_Codec_{{ loop.index }}_ ua="na">{{ line.codecs.primary_codec }}</Preferred_Codec_{{ loop.index }}_> <!-- options: G711u/G711a/G726-16/G726-24/G726-32/G726-40/G729a/G722 -->
-	<Use_Pref_Codec_Only_{{ loop.index }}_ ua="na">yes</Use_Pref_Codec_Only_{{ loop.index }}_>
-	<Second_Preferred_Codec_{{ loop.index }}_ ua="na">{{ line.codecs.secondary_codec }}</Second_Preferred_Codec_{{ loop.index }}_> <!-- options: Unspecified/G711u/G711a/G726-16/G726-24/G726-32/G726-40/G729a/G722 -->
-	<Third_Preferred_Codec_{{ loop.index }}_ ua="na">{{ line.codecs.tertiary_codec }}</Third_Preferred_Codec_{{ loop.index }}_> <!-- options: Unspecified/G711u/G711a/G726-16/G726-24/G726-32/G726-40/G729a/G722 -->
+    <!-- Audio Configuration -->
+    <Preferred_Codec_{{ loop.index }}_ ua="na">{{ line.codecs.primary_codec }}</Preferred_Codec_{{ loop.index }}_> <!-- options: G711u/G711a/G726-16/G726-24/G726-32/G726-40/G729a/G722 -->
+    <Use_Pref_Codec_Only_{{ loop.index }}_ ua="na">yes</Use_Pref_Codec_Only_{{ loop.index }}_>
+    <Second_Preferred_Codec_{{ loop.index }}_ ua="na">{{ line.codecs.secondary_codec }}</Second_Preferred_Codec_{{ loop.index }}_> <!-- options: Unspecified/G711u/G711a/G726-16/G726-24/G726-32/G726-40/G729a/G722 -->
+    <Third_Preferred_Codec_{{ loop.index }}_ ua="na">{{ line.codecs.tertiary_codec }}</Third_Preferred_Codec_{{ loop.index }}_> <!-- options: Unspecified/G711u/G711a/G726-16/G726-24/G726-32/G726-40/G729a/G722 -->
 
-	<Log_Missed_Calls_for_EXT_{{ loop.index }} ua="na">{{ line.basic.missed_call }}</Log_Missed_Calls_for_EXT_{{ loop.index }}>
+    <Log_Missed_Calls_for_EXT_{{ loop.index }} ua="na">{{ line.basic.missed_call }}</Log_Missed_Calls_for_EXT_{{ loop.index }}>
 
-	<!-- Dial Plan -->
-	<Dial_Plan_{{ loop.index }}_ ua="na">{{ line.sip.dialplan }}</Dial_Plan_{{ loop.index }}_>
+    <!-- Dial Plan -->
+    <Dial_Plan_{{ loop.index }}_ ua="na">{{ line.sip.dialplan }}</Dial_Plan_{{ loop.index }}_>
 {% endif %}
 {% endfor %}
 
-	<!-- RTP Parameters -->
-	<RTP_Port_Min ua="na">{{ sip.rtp.min_port }}</RTP_Port_Min>
-	<RTP_Port_Max ua="na">{{ sip.rtp.max_port }}</RTP_Port_Max>
-	<RTP_Packet_Size ua="na">0.020</RTP_Packet_Size>
+    <!-- RTP Parameters -->
+    <RTP_Port_Min ua="na">{{ sip.rtp.min_port }}</RTP_Port_Min>
+    <RTP_Port_Max ua="na">{{ sip.rtp.max_port }}</RTP_Port_Max>
+    <RTP_Packet_Size ua="na">0.020</RTP_Packet_Size>
 
-	<RFC_2543_Call_Hold ua="na">{{ basic.general.rfc2543}}</RFC_2543_Call_Hold>
+    <RFC_2543_Call_Hold ua="na">{{ basic.general.rfc2543}}</RFC_2543_Call_Hold>
 
-	<Time_Format ua="rw">{{ other.datetime.time_format }}</Time_Format> <!-- options: 12hr/24hr -->
-	<Date_Format ua="rw">{{ other.datetime.date_format }}</Date_Format> <!-- options: month/day/day/month -->
+    <Time_Format ua="rw">{{ other.datetime.time_format }}</Time_Format> <!-- options: 12hr/24hr -->
+    <Date_Format ua="rw">{{ other.datetime.date_format }}</Date_Format> <!-- options: month/day/day/month -->
 
-	<!-- Miscellaneous -->
-	<Time_Zone ua="na">{{ other.datetime.timezone }}</Time_Zone> <!-- options: GMT-12:00/GMT-11:00/GMT-10:00/GMT-09:00/GMT-08:00/GMT-07:00/GMT-06:00/GMT-05:00/GMT-04:00/GMT-03:30/GMT-03:00/GMT-02:00/GMT-01:00/GMT/GMT+01:00/GMT+02:00/GMT+03:00/GMT+03:30/GMT+04:00/GMT+05:00/GMT+05:30/GMT+05:45/GMT+06:00/GMT+06:30/GMT+07:00/GMT+08:00/GMT+09:00/GMT+09:30/GMT+10:00/GMT+11:00/GMT+12:00/GMT+13:00 -->
-	<Ignore_DHCP_Time_Offset ua="na">{{ other.datetime.ignore_dhcp }}</Ignore_DHCP_Time_Offset>
-	<Daylight_Saving_Time_Rule ua="na">{{ other.datetime.dst_rule }}</Daylight_Saving_Time_Rule>
-	<Daylight_Saving_Time_Enable ua="na">{{ other.datetime.enable_dst }}</Daylight_Saving_Time_Enable>
+    <!-- Miscellaneous -->
+    <Time_Zone ua="na">{{ other.datetime.timezone }}</Time_Zone> <!-- options: GMT-12:00/GMT-11:00/GMT-10:00/GMT-09:00/GMT-08:00/GMT-07:00/GMT-06:00/GMT-05:00/GMT-04:00/GMT-03:30/GMT-03:00/GMT-02:00/GMT-01:00/GMT/GMT+01:00/GMT+02:00/GMT+03:00/GMT+03:30/GMT+04:00/GMT+05:00/GMT+05:30/GMT+05:45/GMT+06:00/GMT+06:30/GMT+07:00/GMT+08:00/GMT+09:00/GMT+09:30/GMT+10:00/GMT+11:00/GMT+12:00/GMT+13:00 -->
+    <Ignore_DHCP_Time_Offset ua="na">{{ other.datetime.ignore_dhcp }}</Ignore_DHCP_Time_Offset>
+    <Daylight_Saving_Time_Rule ua="na">{{ other.datetime.dst_rule }}</Daylight_Saving_Time_Rule>
+    <Daylight_Saving_Time_Enable ua="na">{{ other.datetime.enable_dst }}</Daylight_Saving_Time_Enable>
 
-	<!-- System Configuration -->
-	<Enable_Web_Server ua="na">Yes</Enable_Web_Server>
-	<Web_Server_Port ua="na">80</Web_Server_Port>
-	<Enable_Web_Admin_Access ua="na">Yes</Enable_Web_Admin_Access>
-	<Signaling_Protocol ua="na">SIP</Signaling_Protocol> <!-- options: SIP/SPCP -->
-	<Phone-UI-readonly ua="na">No</Phone-UI-readonly>
-	<Phone-UI-user-mode ua="na">No</Phone-UI-user-mode>
-	<Connection_Type ua="rw">DHCP</Connection_Type> <!-- options: DHCP/Static IP -->
-	<Admin_Passwd ua="na">{{ other.password.admin }}</Admin_Passwd>
-	<User_Password ua="rw">{{ other.password.user }}</User_Password>
+    <!-- System Configuration -->
+    <Enable_Web_Server ua="na">Yes</Enable_Web_Server>
+    <Web_Server_Port ua="na">80</Web_Server_Port>
+    <Enable_Web_Admin_Access ua="na">Yes</Enable_Web_Admin_Access>
+    <Signaling_Protocol ua="na">SIP</Signaling_Protocol> <!-- options: SIP/SPCP -->
+    <Phone-UI-readonly ua="na">No</Phone-UI-readonly>
+    <Phone-UI-user-mode ua="na">No</Phone-UI-user-mode>
+    <Connection_Type ua="rw">DHCP</Connection_Type> <!-- options: DHCP/Static IP -->
+    <Admin_Passwd ua="na">{{ other.password.admin }}</Admin_Passwd>
+    <User_Password ua="rw">{{ other.password.user }}</User_Password>
 
-	<Primary_DNS ua="rw">{{ system.network.primary_dns }}</Primary_DNS>
-	<Secondary_DNS ua="rw">{{ system.network.secondary_dns }}</Secondary_DNS>
-	<DNS_Server_Order ua="na">Manual,DHCP</DNS_Server_Order> <!-- options: Manual/Manual,DHCP/DHCP,Manual -->
-	<STUN_Enable ua="na">{{ system.stun.enable }}</STUN_Enable>
-	<STUN_Test_Enable ua="na">{{ system.stun.enable_test }}</STUN_Test_Enable>
-	<STUN_Server ua="na">{{ system.stun.host }}</STUN_Server>
+    <Primary_DNS ua="rw">{{ system.network.primary_dns }}</Primary_DNS>
+    <Secondary_DNS ua="rw">{{ system.network.secondary_dns }}</Secondary_DNS>
+    <DNS_Server_Order ua="na">Manual,DHCP</DNS_Server_Order> <!-- options: Manual/Manual,DHCP/DHCP,Manual -->
+    <STUN_Enable ua="na">{{ system.stun.enable }}</STUN_Enable>
+    <STUN_Test_Enable ua="na">{{ system.stun.enable_test }}</STUN_Test_Enable>
+    <STUN_Server ua="na">{{ system.stun.host }}</STUN_Server>
 
-	<Cfwd_All_Act_Code ua="na"></Cfwd_All_Act_Code>
-	<Cfwd_All_Deact_Code ua="na"></Cfwd_All_Deact_Code>
+    <Cfwd_All_Act_Code ua="na"></Cfwd_All_Act_Code>
+    <Cfwd_All_Deact_Code ua="na"></Cfwd_All_Deact_Code>
 </flat-profile>

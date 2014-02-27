@@ -78,7 +78,7 @@ class Accounts {
             return $account_doc_arr;
         else
             throw new RestException(404, "No account related to that provider were found");
-            
+
     }
 
     /**
@@ -129,9 +129,9 @@ class Accounts {
                     'id' => $account_id);
             else
                 throw new RestException(500, 'Could not link the new account with its provider');
-        } else 
+        } else
             throw new RestException(500, 'Could not create that account Database');
-            
+
     }
     
     /**

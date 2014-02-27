@@ -77,7 +77,7 @@ class helper_utils {
     * @return   mixed   The account ID
     */
     public static function get_account_id($uri) {
-        if (preg_match("#\/([0-9a-f]{32})\/#", $uri, $match_result))
+        if (preg_match("#([0-9a-f]{32})#", $uri, $match_result))
             return $match_result[1];
         else
             return false;
@@ -92,7 +92,8 @@ class helper_utils {
     */
     public static function get_account_db($uri) {
         // making sure that $account_id is well formed
-        $account_id = get_account_id($uri);
+        $account_id = self::get_account_id($uri);
+
         if ($account_id) {
             // account/xx/xx/xxxxxxxxxxxxxxxx
             $account_db = "account/" . substr_replace(substr_replace($account_id, '/', 2, 0), '/', 5, 0);

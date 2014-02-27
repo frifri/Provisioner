@@ -66,10 +66,10 @@ class helper_utils {
     /**
      * Extract the mac address from a User Agent or URI
      *
-     * @author	frifri
-     * @param	string	$ua	User Agent
-     * @param	string	$uri	URI
-     * @return	mixed	The Extracted Address or False
+     * @author  frifri
+     * @param   string  $ua User Agent
+     * @param   string  $uri    URI
+     * @return  mixed   The Extracted Address or False
      */
     public static function get_mac_address($ua, $uri) {
         // Let's check in the User-Agent

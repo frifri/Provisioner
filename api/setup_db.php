@@ -16,20 +16,14 @@ require_once LIB_BASE . '/php_on_couch/couch.php';
 require_once LIB_BASE . '/php_on_couch/couchClient.php';
 require_once LIB_BASE . '/php_on_couch/couchDocument.php';
 
-define('CONFIG_FILE', PROVISIONER_BASE . 'config.json');
+$settings = helper_utils::get_settings();
 
-// Loading config file
-$configs = json_decode(file_get_contents(CONFIG_FILE));
+$server_url = $settings->database->url . ":" . $settings->database->port;
 
-if (!$configs)
-    die("Could not load the config file\n");
-
-$server_url = $configs->database->url . ":" . $configs->database->port;
-
-if (strtolower($configs->database->type) == "bigcouch") {
-    if (strlen($configs->database->username) && strlen($configs->database->password)) {
+if (strtolower($settings->database->type) == "bigcouch") {
+    if (strlen($settings->database->username) && strlen($settings->database->password)) {
         $server_url = str_replace('http://', '', $server_url);
-        $credentials = $configs->database->username . ':' . $configs->database->password . '@';
+        $credentials = $settings->database->username . ':' . $settings->database->password . '@';
         $server_url = 'http://' . $credentials . $server_url;
     }
 
@@ -37,13 +31,14 @@ if (strtolower($configs->database->type) == "bigcouch") {
     // =========
 
     // Creating the database
-    $couch_client = new couchClient($server_url, $configs->db_prefix . "providers");
+    $providers_db = helper_utils::get_providers_db();
+    $couch_client = new couchClient($server_url, $providers_db);
 
     if (!$couch_client->databaseExists())
         $couch_client->createDatabase();
 
     // Creating the master account
-    $provider = $configs->database->master_provider;
+    $provider = $settings->database->master_provider;
 
     $provider_doc = new stdClass();
     $provider_doc->name = $provider->name;
@@ -55,7 +50,7 @@ if (strtolower($configs->database->type) == "bigcouch") {
     $provider_doc->settings = null;
 
     $provider_view = new stdCLass();
-    $provider_view->_id = "_design/" . $configs->db_prefix . "providers";
+    $provider_view->_id = "_design/" . $providers_db;
     $provider_view->language = "javascript";
 
     $view = new stdCLass();
@@ -82,7 +77,8 @@ if (strtolower($configs->database->type) == "bigcouch") {
     // ================
 
     // Creating the database
-    $couch_client->useDatabase($configs->db_prefix . "factory_defaults");
+    $factory_defaults_db = helper_utils::get_factory_defaults_db();
+    $couch_client->useDatabase($factory_defaults_db);
 
     if (!$couch_client->databaseExists())
         $couch_client->createDatabase();
@@ -90,7 +86,7 @@ if (strtolower($configs->database->type) == "bigcouch") {
 
     // Creating the views
     $factory_view = new stdCLass();
-    $factory_view->_id = "_design/" . $configs->db_prefix . "factory_defaults";
+    $factory_view->_id = "_design/" . $factory_defaults_db;
     $factory_view->language = "javascript";
 
     // reset
@@ -126,7 +122,8 @@ if (strtolower($configs->database->type) == "bigcouch") {
     // =======================
 
     // Creating the database
-    $couch_client->useDatabase($configs->db_prefix . "system_account");
+    $system_account_db = helper_utils::get_system_account_db();
+    $couch_client->useDatabase($system_account_db);
 
     if (!$couch_client->databaseExists())
         $couch_client->createDatabase();
@@ -151,7 +148,8 @@ if (strtolower($configs->database->type) == "bigcouch") {
     // ===================
 
     // Creating the database
-    $couch_client->useDatabase($configs->db_prefix . "mac_lookup");
+    $mac_lookup_db = helper_utils::get_mac_lookup_db();
+    $couch_client->useDatabase($mac_lookup_db);
 
     if (!$couch_client->databaseExists())
         $couch_client->createDatabase();
@@ -162,5 +160,3 @@ if (strtolower($configs->database->type) == "bigcouch") {
     echo "SUCCESS!\n";
     echo "=========================== \n";
 }
-
- ?>

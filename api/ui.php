@@ -67,6 +67,19 @@ class Ui {
     /**
      * Will send back the template for a specific device
      *
+     * @url GET /global
+     * @access protected
+     * @class  AccessControlKazoo
+     */
+    function get_global() {
+        $factory_defaults_db = helper_utils::get_factory_defaults_db();
+
+        return $data['data'] = $this->_db->get($factory_defaults_db, 'global')['template'];
+    }
+
+    /**
+     * Will send back the template for a specific device
+     *
      * @url GET /{account_id}/{mac_address}
      * @access protected
      * @class  AccessControlKazoo

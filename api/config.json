@@ -1,5 +1,5 @@
 {
-    "version": "5.5.2",
+    "version": "5.5.3",
     "static_data_source": "database",
     "adapter": "2600hz",
     "custom_http_port": "",

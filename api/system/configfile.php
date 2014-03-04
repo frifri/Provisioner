@@ -353,7 +353,7 @@ class system_configfile {
                 array_push($this->_arrData, $obj);
         }
     }
-    
+
     /**
     * Generate ALL Configuration File
     *

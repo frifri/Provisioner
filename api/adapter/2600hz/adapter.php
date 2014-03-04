@@ -31,7 +31,7 @@ class adapter_2600hz_adapter {
         // Logger
         $log = KLogger::instance(LOGS_BASE, Klogger::DEBUG);
         $log->logInfo('- Entering 2600hz adapter -');
-                
+
         // Load the datasource
         $db = new wrapper_bigcouch();
         $log->logInfo("Bigcouch loaded");
@@ -42,16 +42,16 @@ class adapter_2600hz_adapter {
             return false;
         }
         $log->logDebug("Current mac address: $mac_address");   
-        
+
         // Load the config manager
         $config_manager = new system_configfile();
         $config_manager->set_mac_address($mac_address);
         $config_manager->set_request_type('http');
-        
+
         $log->logInfo('Looking for the provider information...');
         // This is retrieve from a view, it is NOT the full doc
         $provider_doc = $db->get($providers_db, $provider_id);
-        
+
         if (!$provider_doc) {
             $log->logFatal("Could not load the provider information - EXIT");
             return false;
@@ -59,7 +59,7 @@ class adapter_2600hz_adapter {
 
         // This will be used to set the provisioner_url
         $config_manager->set_domain($provider_doc['domain']);
-			
+
         $log->logInfo('Looking for the account_id in the mac_lookup...');
         $account_id = $db->get_account_id($mac_address);
 
@@ -82,7 +82,7 @@ class adapter_2600hz_adapter {
         if ($needs_manual_provisioning) {
             $log->logWarn('Needs manual provisioning... Apparently');
             $config_manager->import_settings($db->load_settings($system_account_db, 'manual_provisioning'));
-            
+
             // For now at least
             return false;
         }
@@ -92,17 +92,17 @@ class adapter_2600hz_adapter {
             $log->logFatal('That account do not belong to that provider');
             return false;
         }
-        
+
         $log->logInfo('Will now gather all the information from the database / finish the config_manager building...');
-        
+
         $log->logInfo('Looking for the device settings...');
         // This is just the settings
         $phone_doc = $db->get($account_db, $mac_address);
         $phone_settings = $phone_doc['settings'];
-        
+
         // Setting the device infos
         $config_manager->set_device_infos($phone_doc['brand'], $phone_doc['model']);
-        
+
         $log->logInfo('Generating doc name for brand/family/model...');
         // Generate the doc names for the brand/family/model settings
         $brand_doc_name = $config_manager->get_brand();
@@ -111,19 +111,19 @@ class adapter_2600hz_adapter {
         $log->logDebug("Brand doc name: $brand_doc_name");
         $log->logDebug("Family doc name: $family_doc_name");
         $log->logDebug("Model doc name: $model_doc_mame");
-        
+
         $log->logInfo('Doing it from the database...');
         //$config_manager->import_settings($db->load_settings($system_account_db, 'global_settings'));
         $config_manager->import_settings($db->load_settings($factory_defaults_db, $brand_doc_name));
         $config_manager->import_settings($db->load_settings($factory_defaults_db, $family_doc_name));
         $config_manager->import_settings($db->load_settings($factory_defaults_db, $model_doc_mame));
-        
-		// Why should we add that if it is empty?
+
+        // Why should we add that if it is empty?
         if (isset($provider_doc['settings'])) {
             $log->logInfo('Importing provider settings...');
             $config_manager->import_settings($provider_doc['settings']);
         }
-			
+
         $log->logInfo('Importing account settings...');
         $config_manager->import_settings($db->load_settings($account_db, $account_id));
 
@@ -136,7 +136,7 @@ class adapter_2600hz_adapter {
         $log->logInfo('Retrieving a first version of the merge setting object...');
         // Retrieve the settings (meaning a first merged object)
         $merged_settings = $config_manager->get_merged_config_objects();
-		
+
         $log->logInfo('Reassigning merge object into the config manager at key 0...');
         $config_manager->set_settings($merged_settings, false);
 

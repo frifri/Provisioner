@@ -107,8 +107,6 @@ class Devices {
         $object_ready = $this->_db->prepare_add_device($request_data, $mac_address);
         $new_doc = $this->_db->add($account_db, $object_ready);
 
-        var_dump($new_doc);
-
         if ($new_doc) {
             $lookup_obj = array(
                 '_id' => $mac_address,
